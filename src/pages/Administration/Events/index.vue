@@ -1,0 +1,238 @@
+<template>
+    <div class="row">
+      <div class="col-12">
+        <div class="box-header">
+          <div class="row">
+            <div class="col-2">
+              <!-- <div class="num-title">
+               Total Eventos:
+              </div> -->
+              <!-- <div class="num-count">
+              23
+              </div> -->
+            </div>
+            <div class="col-6">
+              <!-- <div class="num-title">
+               Proximo Evento:
+              </div>
+              <div class="num-count">
+              24:25:12
+              </div> -->
+            </div>
+            <div class="col-3" v-if="roleName != 'guest'">
+              <router-link :to="{path:'/create-event'}">
+                <p-button type="primary" block>Crear nuevo evento</p-button>
+              </router-link>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <h3>Listado de Eventos</h3>
+      </div>
+      <div class="col-md-4">
+        <br>
+        <select class="custom-select d-block w-100" id="country" required="">
+              <option value="">Ver eventos...</option>
+              <option>Pendientes</option>
+              <option>Cerrados</option>
+            </select>
+      </div>
+      <div class="col-12">
+
+        <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Evento</th>
+                  <th scope="col">Empresa</th>
+                  <th scope="col">Inicia</th>
+                  <th scope="col">Termina</th>
+                  <th v-if="roleName != 'guest'" scope="col" class="text-right">Opciones</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                
+
+                <tr v-for="event in listEvents" :key="event.id">
+                  <th scope="row">
+                    {{event.id}}
+                  </th>
+                  <td>{{event.name}}</td>
+                  <td>{{event.company.name}}</td>
+                  <td>{{event.start_date}}</td>
+                  <td>{{event.end_date}}</td>
+                  <td class="text-right">                    
+                    <button v-if="event.wa_req_feria_comercial" @click="goToFeriaAdmin(event.id,event.name)" type="button" class="btn btn-outline-primary btn-sm mx-1" title="Registro feria comercial" >
+                      <span class="ti-briefcase"></span>
+                    </button>                    
+                    <button @click="switchDesignComponent(event.id)" type="button" class="btn btn-outline-primary btn-sm mx-1">
+                            <span class="ti-palette"></span>
+                    </button>
+
+                    <router-link  target="_blank" :to="{path:'Landing-Event', query: {eventId:event.id} }" v-if="roleName == 'guest'">
+                      <button type="button" class="btn btn-outline-primary btn-sm mx-1" title="Ver landing" >
+                        <span class="ti-eye"></span>
+                      </button>
+                    </router-link>
+
+                    <button type="button" @click="showMetrics(event.id)" class="btn btn-outline-primary btn-sm mx-1">
+                       <span class="ti-bar-chart"></span>
+                    </button>
+                    <button type="button" @click="showLanding(event.id)" class="btn btn-outline-primary btn-sm mx-1">
+                       <span class="ti-eye"></span>
+                    </button>
+
+                    <router-link :to="{name:'Editar Evento', params: {eventId:event.id} }" v-if="roleName != 'guest'">
+                      <button type="button" class="btn btn-outline-primary btn-sm mx-1" title="editar">
+                        <span class="ti-pencil-alt"></span>
+                      </button>
+                    </router-link>
+
+                    <button @click="deleteEvent(event.id)" v-if="roleName != 'guest'" type="button" class="btn btn-outline-danger btn-sm mx-1">
+                       <span class="ti-trash"></span>
+                    </button>
+
+                  </td>
+                </tr>
+              </tbody>
+            </table> 
+            <sliding-pagination
+              :current="currentPage"
+              :total="totalPages"
+              @page-change="getEvents"
+            ></sliding-pagination>
+
+
+<!--
+        <card :title="table1.title" :subTitle="table1.subTitle">
+          <div slot="raw-content" class="table-responsive">
+            <paper-table :data="table1.data" :columns="table1.columns">
+
+            </paper-table>
+          </div>
+        </card> -->
+      </div>
+      <design :showModal="showDesign" :eventID="eventID" @close-modal="oncloseModal()" />
+    </div>
+</template>
+<script>
+import Vue from 'vue'
+import { PaperTable } from "@/components";
+import SlidingPagination from 'vue-sliding-pagination'
+import design from '../../landing/Events/components/design'
+
+export default {
+  components: {
+    PaperTable, SlidingPagination, design
+  },
+  data() {
+    return {
+      uri: process.env.VUE_APP_URL_FRONT,
+      currentPage:1,
+      totalPages:5,
+      listEvents:[],
+      roleName: localStorage.getItem('_current_role_name'),
+      showDesign:false,
+      eventID:null
+    }
+  },
+  created(){
+    this.getEvents()
+  },
+  methods:{
+    oncloseModal(){
+      this.showDesign = false
+    },
+    goToFeriaAdmin(idEvent, nameEvent){
+      this.$router.push({ name: 'FeriaAdmin', params: {event_id: idEvent, event_name:nameEvent }})
+    },
+    switchDesignComponent(event){
+      this.eventID = event
+      console.log("Click")
+      this.showDesign = !this.showDesign
+    },
+    showDesignComponent:function(newVal){
+      if(newVal == true) this.$modal.show('edit-poll')
+      else this.$modal.hide('edit-poll')
+    },
+    showMetrics(id){
+      axios.get(`eventMetrics/${id}`).then(response=>{
+        let metrics = response.data.data
+        if(metrics.length == 0){
+          this.$swal({icon:'error', text:'No hay datos aún'})
+        }else{
+          let stringAlert = ''
+          metrics.map((item, index) =>{
+            if(item.type == 'Registrados')stringAlert =  stringAlert+item.type+':  <b>'+item.total+'</b><br>'
+            else stringAlert =  stringAlert+item.type+':  <b>'+item.porcentaje.slice(0, 4)+'% - '+item.cantidad+'</b><br>'
+          })
+          this.$swal.fire({title: '<strong>Métricas</strong>',  html:stringAlert })
+        }
+      }).catch(error=>{
+        
+      })
+    },
+    async fetchDataGuests(event){
+      let response
+      response = await axios.get(`reportEventUsers/${event}`)
+      if(response.data.data.length == 0) this.$swal({icon:'error', text:'No hay datos'})
+      return response.data.data
+    },
+    showLanding(id){
+      let aux = document.createElement("input");
+      let text = this.uri+'Landing-Event?eventId='+id
+      aux.setAttribute("value", text);
+      document.body.appendChild(aux);
+      aux.select();
+      document.execCommand("copy");
+      document.body.removeChild(aux);
+      this.$swal({icon:'success', text:'Url copiada en portapapeles'})
+    },
+    deleteEvent(eventId){
+      axios.delete(`events/${eventId}`).then(response =>{
+        this.getEvents()        
+      }).catch(error=>{
+        alert("error al elimanar, hay actividades asociadas ")
+      })
+    },
+    getEvents(selectedPage=1){
+      this.currentPage = selectedPage
+      let params = {
+        pagination: true,
+        per_page: 10,
+        page: selectedPage
+      }
+      
+      axios.get('events', {params}).then(response =>{
+        this.listEvents = response.data.data
+        this.totalPages = Math.ceil(Number(response.data.pagination.total)/Number(params.per_page))
+      })
+    }
+  }
+
+};
+</script>
+<style>
+
+@import "~vue-sliding-pagination/dist/style/vue-sliding-pagination.css";
+.box-header{
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+.num-title{
+  font-size: 0.8rem;
+}
+.num-count{
+  font-size: 3rem;
+  font-weight: bold;
+  color:  #8e04cc
+}
+
+
+
+</style>

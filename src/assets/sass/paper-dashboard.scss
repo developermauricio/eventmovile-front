@@ -1,0 +1,917 @@
+/*!
+
+ =========================================================
+ * Vue Paper Dashboard - v2.0.0
+ =========================================================
+
+ * Product Page: http://www.creative-tim.com/product/paper-dashboard
+ * Copyright 2019 Creative Tim (http://www.creative-tim.com)
+ * Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard/blob/master/LICENSE.md)
+
+ =========================================================
+
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+ */
+ @import "paper/variables";
+ @import "paper/mixins";
+ @import "paper/typography";
+ // Core CSS
+ @import "paper/misc";
+ @import "paper/sidebar-and-main-panel";
+ @import "paper/buttons";
+ @import "paper/inputs";
+ @import "paper/alerts";
+ @import "paper/tables";
+ @import "paper/checkbox-radio";
+ @import "paper/navbars";
+ @import "paper/footers";
+ // Fancy Stuff
+ @import "paper/dropdown";
+ @import "paper/cards";
+ @import "paper/chartist";
+ @import "paper/responsive";
+
+
+ // My Styles
+ html {
+  --scrollbarBG: transparent;
+  --thumbBG: #6c757d;
+}
+
+::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG) ;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--thumbBG); 
+}
+
+ $bg-1: #F5F5F5;
+ $gray-2: rgb(172, 172, 172);
+
+
+ .timeline {
+
+   &.main {
+     height: 53vh;
+   }
+
+
+
+   &.main-2 {
+     height: 65vh;
+
+     .timeline-content {
+      position: absolute;
+      height: 55vh;
+      overflow-y: auto;
+    }
+   }
+
+   &-content {
+     position: absolute;
+     height: 44vh;
+     overflow-y: auto;
+   }
+
+   &-item {
+     padding-left: 4rem;
+     position: relative;
+     height: 80px;
+     margin-bottom: 1rem;
+
+     &.available {
+       background: #f9f9f9;
+       border-radius: 5px;
+       height: 33px;
+       width: 100%;
+
+       .subtitle-2 {
+         line-height: 2rem;
+       }
+     }
+
+     .avatar {
+       width: 45px;
+       height: 45px;
+     }
+     .btn.small {
+       width: 50%;
+       display: block;
+     }
+   }
+
+   &-hour {
+     position: absolute;
+     left: 5px;
+     top: 20%;
+     font-size: 0.7rem;
+
+     &::after {
+       content: "";
+       display: block;
+       border-radius: 50%;
+       width: 7px;
+       height: 7px;
+       background: $primary-color;
+       position: absolute;
+       right: -18px;
+       top: 7px;
+     }
+   }
+
+   &-date {
+     border: 0.5px solid $gray-2;
+     border-radius: 5px;
+     padding: 0.5rem;
+     display: block;
+     max-width: 90% !important;
+     font-size: 0.8rem;
+     color:$primary-color;
+     margin-bottom: 2rem !important;
+
+     &__icon {
+       margin-right: 0.5rem;
+     }
+
+     &__btn {
+       position: absolute;
+       right: 10px;
+       color: $gray-2;
+       font-size: 1rem;
+       cursor: pointer;
+     }
+   }
+
+   .line {
+     width: 5px;
+     height: 100%;
+     border-left: 2px dotted #a59ca9;
+     position: absolute;
+     left: 58px;
+     top: 80px;
+   }
+ }
+
+ .btn-outline-primary {
+   &.small {
+     font-size: 0.67rem;
+     text-transform: capitalize;
+     width: 100%;
+     border-width: 0.8px;
+     font-weight: normal;
+     padding: 3px;
+   }
+ }
+
+ 
+ .products {
+   &.main {
+     height: 38vh;
+   }
+   &.main-2 {
+     height: 60vh;
+   }
+   &-content {
+     height: 90vh;
+     overflow-y: auto;
+   }
+   &-content-2 {
+     height: 54vh;
+     overflow-y: auto;
+   }
+   &-item {
+     cursor: pointer;
+   }
+ }
+
+ .document {
+   &.main {
+     height: 27vh;
+     overflow-y: auto;
+
+     .document-content {
+      height: 19vh;
+      overflow-y: auto;
+    }
+
+   }
+
+    .subtitle2 {
+      margin-bottom: 20px;
+    }
+
+   &-content {
+     height: 57vh;
+     overflow-y: auto;
+   }
+   &-item {
+     background: $bg-1;
+     border: 0.7px solid $gray-2;
+     border-radius: 5px;
+     padding: 1.5rem 0.8rem;
+     position: relative;
+     cursor: pointer;
+
+     a {
+       color: #898989;
+     }
+   }
+
+   &-name {
+     font-size: 0.8rem;
+     font-weight: bold;
+     padding-right: 1rem;
+     margin-bottom: 0;
+     line-height: 0;
+   }
+
+   &-icon {
+     position: absolute;
+     top: 20px;
+     right: 20px;
+   }
+ }
+
+
+ .poll {
+  &.main {
+    height: 27vh;
+    overflow-y: auto;
+
+    .poll-content {
+     height: 20.8vh;
+     overflow-y: auto;
+   }
+
+  }
+
+   .subtitle2 {
+     margin-bottom: 20px;
+   }
+
+  &-content {
+    height: 57vh;
+    overflow-y: auto;
+  }
+  &-item {
+    border: 0.7px solid $gray-2;
+    border-radius: 5px;
+    padding: 1.5rem 0.8rem;
+  }
+
+  &-ask {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: lowercase;
+    margin-bottom: 1rem;
+  }
+
+  &-answer {
+    font-size: 0.8rem;
+  }
+
+  .form-check {
+    margin-bottom: 1rem;
+  }
+
+}
+
+ .agenda {
+   &.main {
+     height: 50vh;
+   }
+ }
+
+ .invitaciones {
+   /*background-color: #FDFDF0;*/
+   height: 180px;
+
+   &.small {
+
+     .invitaciones-btn {
+       width: 35px;
+       height: 35px;
+       }
+     .avatar {
+       width: 40px;
+       height: 40px;
+       }
+
+   }
+
+   &-content {
+     height: 124px;
+     overflow-y: auto;
+   }
+   .box-card__title {
+     color: #64645C;
+     font-weight: bold;
+     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+   }
+
+   .avatar {
+     width: 50px;
+     height: 50px;
+
+     &.small {
+       width: 30px;
+       height: 30px;
+     }
+   }
+
+   &-item {
+     border-bottom: 1px solid $bg-1;
+   }
+
+
+   &-btn {
+     border-style: none;
+     border-radius: 50%;
+     width: 45px;
+     height: 45px;
+     padding: 0.5rem;
+     text-align: center;
+     margin: 0 0.2rem;
+     background-color: transparent;
+
+     &.accept {
+       border: 1px solid #919184;
+       color: #919184;
+
+       &:hover {
+         background:  #919184;
+         color: white;
+       }
+     }
+
+     &.cancel {
+       border: 1px solid #D9D9C0;
+       color: #D9D9C0;
+
+       &:hover {
+         border: 1px solid #919184;
+         color: #919184;
+       }
+     }
+   }
+ }
+
+ .participantes {
+
+   &.main {
+     height: 60vh;
+   }
+   &-content {
+     height: 50vh;
+     overflow-y: auto;
+   }
+   &-item {
+     border-bottom: 1px solid $bg-1;
+
+     .par-small {
+       font-weight: normal;
+       font-size: 0.9rem;
+     }
+
+     .avatar {
+       width: 60px;
+       height: 60px;
+       margin-top: 7px;
+
+       &.small {
+         width: 45px;
+         height: 45px;
+       }
+     }
+
+   }
+
+   &__footer {
+     margin-top: -15px;
+     display: flex;
+
+     .col1 {
+       flex: 1;
+     }
+     .col2 {
+       flex: 1;
+     }
+   }
+ }
+
+ .search {
+
+   &-icon {
+     margin: 0 0.5rem;
+   }
+
+   &-input {
+     border-style: none;
+     border: 0.7px solid $gray-2;
+     border-radius: 5px;
+     padding: 0.1rem 0.5rem;
+     font-size: 0.8rem;
+     color: $primary-color;
+   }
+ }
+
+ .btn-menu {
+   border-width: 0.7px;
+   box-shadow: 1px 2px 2px rgb(218, 218, 218);
+ }
+ .brand{
+   width: 100px;
+ }
+ .producto-foto {
+   width: 130px;
+   background: white;
+ }
+ .avatar{
+   width: 70px;
+   height: 70px;
+   border:0.7px solid $gray-2;
+   border-radius: 50%;
+   box-shadow: 1px 2px 2px rgb(184, 184, 184);
+ }
+ .title-2{
+   font-weight: bold;
+   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+   font-size: 1.5rem;
+   margin: 0;
+ }
+ .subtitle-1{
+   font-weight: bold;
+   font-size: 1rem;
+   display: block;
+   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+ }
+ .subtitle-2{
+   font-weight: bold;
+   font-size: 0.9rem;
+   display: block;
+   font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+ }
+ .par-small {
+   font-size: 0.7rem;
+   font-weight: bold;
+   color: #898989;
+   display: block;
+ }
+ .box-card {
+   &__title{
+     color: $primary-color;
+     padding: 0;
+     margin: 0;
+     font-size: 0.8rem;
+   }
+ }
+
+
+ .event {
+   background-color:#fff;
+   .dropdown {
+
+     .btn-menu  {
+       background: white;
+     }
+   }
+   .title-main {
+     color: white
+   }
+   .subtitle {
+     color: white
+   }
+   .description {
+     color: white;
+   }
+   .col-side {
+     background: white;
+   }
+   .speakers {
+     color: white;
+     margin: 1rem 0;
+     display: block;
+
+     &__title {
+       color: yellow;
+     }
+   }
+ }
+
+
+ .event {
+   height: auto;
+   max-width: 1800px;
+   width: calc(100% - 60px) ;
+   margin: 0 auto;
+   background-size: cover;
+   background-position: center;
+   .logo-main{
+     width: 250px;
+     img{
+       max-width: 100%;
+     }
+
+   }
+
+
+   .content {
+     &-main{
+       padding:0rem 2rem;
+       width: 94%;
+       margin: auto !important;
+
+       .title-main {
+         font-size: 1.7rem;
+         font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+         font-weight: bold;
+         text-transform: uppercase;
+         margin: 0;
+       }
+
+       .box-card {
+         border: 0.5px solid #C7C7C7;
+         border-radius: 8px;
+       }
+     }
+
+   }
+ }
+
+ .business{
+  height: auto;
+  max-width: 1800px;
+  width: 100% ;
+  /*padding-left: 30px;
+  padding-right: 30px;*/
+  margin: 0 auto;
+  background-size: cover;
+  background-position: center;
+  .logo-main{
+    width: 250px;
+    img{
+      max-width: 100%;
+    }
+
+  }
+
+
+  .content {
+    &-main{
+      padding:0rem 2rem;
+      width: 94%;
+      margin: auto !important;
+
+      .title-main {
+        font-size: 1.7rem;
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 0;
+      }
+
+      .box-card {
+        border: 0.5px solid #C7C7C7;
+        border-radius: 8px;
+      }
+    }
+
+  }
+}
+
+ .footer-option {
+   &.main {
+     height: 18vh;
+   }
+   .par-small {
+     font-size: 0.8rem;
+   }
+ }
+
+ .chat {
+
+
+  &.main {
+    height: 58vh;
+    overflow-y: auto;
+  }
+
+  &.main-2 {
+
+    .chat-content {
+      height: 47vh;
+      overflow-y: auto;
+    }
+
+  }
+
+  &.moderator {
+
+    .chat-content {
+      height: 50vh;
+      overflow-y: auto;
+    }
+
+    .chat-textarea {
+      margin-bottom: 1rem;
+    }
+
+  }
+
+
+
+
+
+   &-textarea {
+     height: 120px !important;
+   }
+
+   &-send {
+     position: relative;
+     padding-right: 4rem;
+     background: #fff;
+
+     .btn-send {
+       background: $primary-color;
+       width: 35px;
+       height: 35px;
+       color: white;
+       border-radius: 50%;
+       text-align: center;
+       line-height: 2.3rem;
+       font-size: 1.2rem;
+       cursor: pointer;
+       position: absolute;
+       bottom: 10px;
+       z-index: 2;
+       right: 15px;
+       
+     }
+     .btn-voice {
+      background: $primary-color;
+      width: 35px;
+      height: 35px;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 2.3rem;
+      font-size: 1.5rem;
+      align-items: center;
+      align-content: center;
+      cursor: pointer;
+      position: absolute;
+      bottom: 60px;
+      z-index: 2;
+      right: 15px;
+      
+      
+    }
+     .btn-video {
+      background: $primary-color;
+      width: 35px;
+      height: 35px;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 2.3rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      position: absolute;
+      bottom: 10px;
+      z-index: 2;
+      right: 15px;
+  
+  }
+   }
+
+   &-box {
+     position: relative;
+   }
+   &-autor {
+     position: absolute;
+     left: 10px;
+     top: 10px;
+     font-size: 0.7rem;
+     color: $primary-color;
+   }
+   &-time {
+     position: absolute;
+     right: 10px;
+     top: 10px;
+     font-size: 0.7rem;
+     color: $primary-color;
+   }
+   &-message {
+     font-size: 0.8rem;
+   }
+
+   &-footer {
+     .link {
+       margin-top: -0.2rem;
+     }
+   }
+
+ }
+
+ .question {
+
+
+
+  &-content {
+      height: 57.8vh;
+      overflow-y: auto;
+    }
+
+  .subtitle2 {
+    margin-bottom: 1rem;
+  }
+
+
+   &-box {
+     position: relative;
+   }
+   &-autor {
+     position: absolute;
+     left: 10px;
+     top: 10px;
+     font-size: 0.9rem;
+     color: $primary-color;
+   }
+   &-time {
+     position: absolute;
+     right: 10px;
+     top: 10px;
+     font-size: 0.7rem;
+     color: $primary-color;
+   }
+   &-message {
+     font-size: 0.9rem;
+   }
+
+   &-footer {
+     .link {
+       margin-top: -0.2rem;
+     }
+   }
+
+ }
+
+ .timer {
+   /*background: white;*/
+   padding: 0.5rem;
+   position: relative;
+   padding-left: 3rem;
+
+   &-count {
+     font-size: 1.6rem;
+     font-weight: bold;
+     color: $primary-color;
+   }
+   &-title {
+     font-size: 0.7rem;
+     margin-top: -0.2rem;
+     display: block;
+   }
+   &-icon {
+     font-size: 2rem !important;
+     position: absolute;
+     left: 0;
+     top: 1rem;
+     color: $primary-color;
+   }
+ }
+
+
+ .bg-standar {
+   background:$bg-1;
+ }
+
+ .alert {
+   background-color: #C119BF;
+   color: #fff;
+   border-radius: 5px;
+
+   .close {
+     color: white;
+     font-size: 1rem;
+     padding-top: 0.3rem;
+   }
+ }
+
+
+ .logo-event-main {
+   position: absolute;
+   bottom: 0;
+   right: 0;
+   width: 130px;
+ }
+
+
+//  Sondeo
+
+.survey-result {
+
+  &__box {
+    margin-bottom: 1rem;
+  }
+
+  &__content {
+    padding: 5rem 4rem 5rem;
+  }
+
+  &__total2 {
+    font-size: 1rem;
+    display: block;
+
+  }
+
+
+  &__next,
+  &__back {
+    background: white;
+    color: blueviolet;
+    border-style: none;
+  }
+
+  &__poll {
+    box-shadow: 0 1px 1px #c2c2c2;
+    padding: 10px;
+    border-radius: 10px;
+    width: 100%;
+    text-align: right;
+    margin-bottom: 2rem;
+    .number {
+      font-size: 2rem;
+    }
+  }
+
+  &__bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-content: center;
+    align-items: center;
+  }
+
+  &__bg {
+    width: 90%;
+    height: 7px;
+    background:#dcdcdc;
+  }
+
+  &__rango {
+    height: 100%;
+    width: 0% ;
+    transition: all 1s ease-in-out
+
+  }
+
+  &__percentage {
+    flex: 1;
+    text-align: right;
+    font-size:2rem ;
+  }
+
+  &__signo {
+    font-size:1rem ;
+  }
+
+
+}
+
+
+
+@media (max-width: 500px) {
+  .business, .event{
+    width: calc(100% - 40px);
+  }
+
+
+  .company.main,
+  .products.main,
+  .document.main,
+  {
+    height: auto;
+  }
+
+  .timeline.main {
+    height: 550px;
+  }
+  .products-content {
+    height: 300px;
+  }
+
+}

@@ -1,0 +1,149 @@
+<template>
+  <div class="container-fluid" style="position: relative; height: 595.812px">
+    <div class="row">
+      <div class="col-4">
+        <router-link class="nav-item" :to="{name:'MenuWebApp' }">
+            <b style="color:red;" class="nav-link">Atras</b>
+        </router-link>
+        <button @click="inLoadPhoto()">subir foto</button>
+      </div>
+      <div class="col-8">
+        <h1>Mi Album</h1>
+      </div>
+    </div>
+    <div v-if="inCreatePhoto" class="row">
+      <div class="col-2">
+        <div class="form-group">
+          <input
+            type="file"
+            name="path_photo"
+            @change="onFileChange"
+            class="form-control"            
+            accept="image/*"
+          />
+        </div>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            v-model="description"
+            id=""
+            cols="30"
+            rows="10"
+          ></textarea>
+        </div>
+        <button class="btn btn-info" onClick="this.disabled=true"  @click="loadPhoto()">subir</button>
+        <button class="btn btn-danger" @click="inLoadPhoto()">cancelar</button>
+      </div>
+    </div>    
+    <div v-if="inCreatePhoto == false" class="row">
+      
+      <div v-for="(ph, index) in photos" :key="index" class="card col-12 col-md-3" style="width: 20rem; margin: 20px 0 24px 0">
+        <img
+          class="card-img-top"
+          width="100"
+          height="200"
+          :src="uriImg+ph.path_photo"
+          :alt="ph.description"
+          style="width: 100%"
+        />
+        <div class="card-body">
+          <p class="card-text">
+            {{ph.description}}
+          </p>
+          <button @click="deletePhoto(ph.id)">borrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Button from "../../../components/Button.vue";
+export default {
+  components: { Button },
+  data() {
+    return {
+      photos: [],
+      id_user: 0,
+      id_album: 0,
+      description: "",
+      path_photo: "",
+      privacidad: 1,
+      upload_at: "",
+      status: 1,
+      id_event: 0,
+      inCreatePhoto: false,
+      uriImg: process.env.VUE_APP_API_URL_FILES,
+    };
+  },
+  mounted() {
+    this.id_user = localStorage.getItem("_current_user_id")
+    this.id_event = localStorage.getItem("eventId")
+    this.getIdAlbum()
+    this.getPhotos()
+  },
+  methods: {
+    async getPhotos(){
+      const response = await axios.get(`listPhotos/${this.id_event}/${this.id_user}`);
+      this.photos = response.data.data;
+      console.log(response);
+    },
+    async uploadPhoto(description, path_photo) {
+      let data = new FormData();
+      data.append("id_user", this.id_user);
+      data.append("id_album", this.id_album);
+      data.append("description", description);
+      data.append("path_photo", path_photo);
+      data.append("privacidad", "private");
+      //CARGAR AL ARRAY DE PHOTOS this.photos.push(data)
+      axios.post("uploadPhoto", data)
+        .then((response) => {
+          //this.$swal({icon:'success', text:'cargada'})
+          this.inCreatePhoto = false
+          this.getPhotos()
+        })
+        .catch((error) => {
+          this.$swal({ icon: "error", text: error });
+        });            
+    },
+    async getIdAlbum() {
+      const response = await axios.get(`album/${this.id_event}`);
+      this.id_album = response.data;
+      console.log(response);
+    },
+    logicCamara() {},
+    inLoadPhoto() {      
+      if (this.inCreatePhoto) this.inCreatePhoto = false;
+      else this.inCreatePhoto = true;
+    },
+    loadPhoto() {
+      let description = this.description;
+      let path_photo = this.path_photo;      
+      this.uploadPhoto(description,path_photo)
+    },
+    onFileChange(e) {
+      let files = e.target.files || e.dataTransfer.files;
+      let idFile = e.target.id;      
+      this.path_photo = files[0];
+    },
+    async deletePhoto(id_photo){
+      //falta validar si se quiere eliminar
+      let params = {
+        id: id_photo
+      }
+      //borrar del arreglo !!
+
+      await axios.put('delPhoto/',params).then(response=>{
+            //this.$swal({icon:'success', text:'borrada'})
+            this.getPhotos()
+         }).catch(error=>{
+            this.$swal({icon:'error', text:error})
+         })
+    }        
+  },
+};
+</script>
+
+<style>
+  
+</style>
