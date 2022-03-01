@@ -674,19 +674,27 @@ export default {
           let resp1 = await axios.post('eventUsers', eventUser).catch(error=>{
             this.$swal({icon:'error', text:error.request.response})
           })
+          
           if(resp1.data.message == "User in event exists") verify++
+
           if(this.update_user){
             verify = 0;
           }
+          
           if(verify == 0){
             let params = {password: this.form.password}
+            
             if(this.update_user){
               params.name = this.form.name
               params.lastname = this.form.lastname
             }
-            await axios.put(`restorePw/${response.data.id}`, params).catch(error=>{
+            //TODO: se cambia la contraseña para un usuario ya registrado.
+            await axios.put(`restorePassword/${response.data.id}`, params).catch(error=>{
               this.$swal({icon:'error', text:this.$t('pages.Events.RegisterEvent.errorUpdatingPasswordMessage')})
             })
+            /* await axios.put(`restorePw/${response.data.id}`, params).catch(error=>{
+              this.$swal({icon:'error', text:this.$t('pages.Events.RegisterEvent.errorUpdatingPasswordMessage')})
+            }) */
           }
         }
         this.showLoader = false

@@ -1,7 +1,15 @@
 import mqtt from 'mqtt';
 
 
-const url = 'wss://brk2.eventmovil.com:8083';
+const url = 'wss://mqtt.socket-aicode.art:8083';
+//const url = 'wss://brk2.eventmovil.com:8083';
+/* const options = {
+    // clientId:"mqttjs01",
+    username: "mqtt",
+    password: "HVH1RpPLiB2hxI5VwKoY",
+    connectTimeout: 4000, // Time out
+    reconnectPeriod: 4000, // Reconnection interval
+}; */
 const options = {
     // clientId:"mqttjs01",
     username:process.env.VUE_APP_USER_MQTT,
