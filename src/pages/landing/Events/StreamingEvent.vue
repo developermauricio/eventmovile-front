@@ -283,6 +283,7 @@
               </div>
               <!-- col 2 -->
               <!-- poll -->
+              <!-- TODO: aqui van el sondeo -->
               <div class="row poll px-1 pb-4" v-if="showQuiz && event.req_probes">
                 <template v-if="probes !== 'answered'">
                   <div class="col-md-12">
@@ -590,6 +591,7 @@ export default {
         // this.getMessagesEvent()
         //this.getUphands()
         this.getProbes(this.activityId)
+        this.getQuestionProbes(this.activityId)
       }
            
       
@@ -1529,7 +1531,10 @@ export default {
         })
       },
       getProbes(id){
-        axios.get(`probe-questions-activity/${id}`).then(res=>{
+        /* TODO: aqui se traen el sondeo de la DB */
+        //axios.get(`probe-questions-activity/${id}`).then(res=>{
+        axios.get(`probe-questions-activity-wh/${id}`).then(res=>{
+          console.log('probe-questions-activity: ', res)
             this.probes = res.data.data.map(item=>{
               const temp = item.questions.map(item2=>{
                 return {
@@ -1541,11 +1546,13 @@ export default {
               return {...item, display: false}
             })
         })
-        console.log(this.probes)
+        console.log('probes...', this.probes)
       },
       getQuestionProbes(id){
-        axios.get(`probe-questions-probe/${id}`).then(res=>{
-            if(res.data === "answered"){
+        //axios.get(`probe-questions-probe/${id}`).then(res=>{
+        axios.get(`probe-questions-activity-wh/${id}`).then(res=>{
+          console.log('response q p', res)
+          /* if(res.data === "answered"){
             this.questionsProbes.push(res.data)
           } else {
             const temp = res.data.data.map(item=>{
@@ -1555,12 +1562,13 @@ export default {
               }
             })
             this.questionsProbes.push(temp)
-          }
+          } */
         })
       },
       getQuestions () { 
         //axios.get(`pollQuestionsEvent/${this.eventId}`).then(response=>{
           axios.get(`pollQuestionsEvent/${this.event.id}`).then(response=>{
+            console.log('pollQuestionsEvent: ', response)
           const res = response.data.data
           
           if(response.data === "answered"){

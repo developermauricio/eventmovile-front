@@ -113,14 +113,18 @@ export default {
           return (voto*100/this.viewAnswer.total).toFixed(0)
       },
       getListQuestions(id){
-        axios.get(`probe-questions-probe-wh/${id}?pagination=false`).then(res=>{
+        //axios.get(`probe-questions-probe-wh/${id}?pagination=false`).then(res=>{
+        axios.get(`probe-questions-probe-wh/${id}`).then(res=>{
+          console.log('getListQuestions: ', res)
         this.questions = res.data
         if(this.questions.length > 0)
             this.changeView(0, true)
         })
       },
       getAndswersData(id){
-        axios.get(`probe-answers-question/${id}?pagination=false`).then(res=>{
+        //axios.get(`probe-answers-question/${id}?pagination=false`).then(res=>{
+        axios.get(`probe-answers-question/${id}`).then(res=>{
+          console.log('getAndswersData: ', res)
 
           if(this.viewAnswer.type_question === "Menu desplegable"){
             const options = JSON.parse(this.viewAnswer.options)
