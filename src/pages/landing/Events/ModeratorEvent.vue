@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper event" :style="'background-color:'+style.section_color_background">
-    <AgoraOnlyAudio v-if="activity.voice_participation_check === 1" :dataId="'activiy'+activityId" :userId="'moderator'+activityId" initAudio="muted"/>
+    <!-- <AgoraOnlyAudio v-if="activity.voice_participation_check === 1" :dataId="'activiy'+activityId" :userId="'moderator'+activityId" initAudio="muted"/> -->
     <!-- header -->
     <div class="header-main px-4 d-flex flex-column flex-md-row align-items-center" :style="'background-color:'+style.section_color_background">
         <div class="logo-main my-0 mr-md-auto font-weight-normal" >
@@ -140,13 +140,13 @@
                   <!-- tab -->
     
                   <!-- tab -->
-                  <div @click="showComponent('probe')" class="col text-center" >
+                  <div @click="showComponent('probe')" class="col text-center" v-if="event.req_probes === 1" >
                     <button :style="'border-radius:5px; background-color:'+backgroundIsSon"  class="border-0 p-2 m-0" title="Sondeos realizados">
                       <span :style="'color:'+style.section_btn_text_color" class="ti-layout-list-thumb h3"></span>
                     </button>
                   </div>
                   <!-- tab -->
-                  <div class="col text-center">
+                  <div class="col text-center" v-if="event.req_probes === 1">
                     <router-link :to="{path:'/Poll-Event/poll/'+activity.event_id+'/'+activity.event_id}">
                       <button :style="'border-radius:5px; background-color:'+style.section_btn_color" class="border-0 p-2 m-0" title="Encuestas realizadas">
                         <span :style="'color:'+style.section_btn_text_color" class="ti-bar-chart h3"></span>
@@ -313,11 +313,11 @@
 </template>
 
 <script>
-import AgoraOnlyAudio from '../../../components/Agora/agoraAudioComponent'
+//import AgoraOnlyAudio from '../../../components/Agora/agoraAudioComponent'
 
 export default {
   name:'ModeratorEvent',
-  components:{AgoraOnlyAudio},
+  //components:{AgoraOnlyAudio},
   data(){
     return{
       uri: process.env.VUE_APP_API_URL,
@@ -359,6 +359,7 @@ export default {
   },
   created(){
     this.activityId = this.$route.query.activityId
+    console.log('activityId: ', this.activityId)
   },
   mounted(){
     var a = new Array()
@@ -366,6 +367,7 @@ export default {
     a[2] = 21
     a[4] = 14
 
+    console.log('mounted:.. ', this.id)
     
     if(this.id){
         axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`
@@ -425,7 +427,7 @@ export default {
       })
     },
     getProbes(id){
-        axios.get(`probe-questions-activity-wh/${id}`).then(res=>{
+        axios.get(`probe-questions-activity-whExt/${id}`).then(res=>{
             this.probes = res.data.data
         })
       },
@@ -445,7 +447,8 @@ export default {
     //   },
       async getUphands(){
         const user = localStorage.getItem('_current_user_id')
-        let url =`questionsForActivity/${this.activityId}/0?per_page=500`
+        //let url =`questionsForActivity/${this.activityId}/0?per_page=500`
+        let url =`questionsForActivityExt/${this.activityId}/0?per_page=500`
         const response = await axios.get(url)
         if(response.data && response.data.data && response.data.data.length>0){
           this.upHands = response.data.data.reverse()
@@ -461,7 +464,7 @@ export default {
         let params = {
           pagination : false
         }
-        const response = await axios.get(`activityMessagesExt/${this.activityId}`, {params})
+        const response = await axios.get(`activityMessagesExtLand/${this.activityId}`, {params})
 
         this.allMessages = response.data.reverse()
         
@@ -477,7 +480,8 @@ export default {
         let params = {
           pagination : false
         }
-        const response = await axios.get(`eventChat/${this.activity.event_id}`, {params})
+        //const response = await axios.get(`eventChat/${this.activity.event_id}`, {params})
+        const response = await axios.get(`eventChatext/${this.activity.event_id}`, {params})
         if(response.data.length && response.data.length>0){
           this.allMessagesEvent = response.data.reverse()
         }
