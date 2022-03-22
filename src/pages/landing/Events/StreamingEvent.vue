@@ -1160,8 +1160,10 @@ export default {
           pagination : false
         }
         const response = await axios.get(`activityMessages/${this.activityId}`, {params})
-        if(response.data.length && response.data.length>0){
-          this.allMessages = response.data.reverse()
+
+        if(response.data.data.length && response.data.data.length>0){
+          console.log('LA DATA', response.data.data)
+          this.allMessages = response.data.data.reverse()
         }
         this.scrollEnd()
         setTimeout(() => {
@@ -1176,8 +1178,9 @@ export default {
           pagination : false
         }
         const response = await axios.get(`eventChat/${this.activity.event_id}`, {params})
-        if(response.data.length && response.data.length>0){
-          this.allMessagesEvent = response.data.reverse()
+
+        if(response.data.data.length && response.data.data.length>0){
+          this.allMessagesEvent = response.data.data.reverse()
         }
         this.scrollEnd()
         setTimeout(() => {

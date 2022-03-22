@@ -20,6 +20,7 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 
 import Vuelidate from "vuelidate"
 import moment from 'moment'
+import Multiselect from 'vue-multiselect'
 require('moment/locale/es')
 import VueGtag from "vue-gtag";
 import { isLoggedIn } from './auth'
@@ -36,6 +37,7 @@ import i18n from './i18n'
 Vue.use(require('vue-moment'), {
     moment
 })
+Vue.component('multiselect', Multiselect)
 Vue.use(VueSweetalert2)
 Vue.use(PaperDashboard)
 Vue.use(VModal)
