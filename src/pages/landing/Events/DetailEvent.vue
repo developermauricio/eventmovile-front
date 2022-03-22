@@ -1088,6 +1088,9 @@ export default {
 </script>
 
 <style>
+img.img-responsive {
+  object-fit: scale-down;
+}
 .hall-title-container {
   display: flex;
 }

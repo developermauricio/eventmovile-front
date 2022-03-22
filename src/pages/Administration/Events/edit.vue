@@ -54,7 +54,7 @@
             </div>
           </div>
 
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6 mb-3" v-if="countrieSelect">
             <label for="country">País ubicación evento</label>
             <multiselect v-model="countrieSelect"
                          @input="getCitiesEvent"
@@ -75,7 +75,7 @@
 
             </multiselect>
           </div>
-          <div class="col-md-6 mb-3">
+          <div class="col-md-6 mb-3" v-if="formEvent.address">
             <label for="country">Dirección del evento</label>
             <input type="text" v-model="formEvent.address" v-model.trim="$v.formEvent.address.$model"
                    class="form-control border-input" id="address" placeholder="" value="" required>
@@ -1004,11 +1004,14 @@ export default {
     },
     getEvent() {
       axios.get('events/' + this.idEvent).then(response => {
-        console.log('DATA DATA', response)
+        console.log('DATA DATA RORO', response)
         const event = response.data
-        this.countrieSelect = event[0].city_event.country_event
-        this.citySelect = event[0].city_event
+      if(event[0].event_type_id !== 1){
+        
+        this.countrieSelect = event[0].city_event ? event[0].city_event.country_event : {}
+        this.citySelect = event[0].city_event || {}
         this.formEvent.address = event[0].address
+       }
         this.formEvent.name = event[0].name
         this.formEvent.event_type_id = event[0].event_type_id
         this.formEvent.description = event[0].description
