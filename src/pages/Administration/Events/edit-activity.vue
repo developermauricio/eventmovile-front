@@ -518,7 +518,12 @@ export default {
       },
       showSpeakerForm(){
         this.getCountriesEvent()
+        this.formSpeaker.name = ''
+        this.formSpeaker.sort_description = ''
+        this.formSpeaker.pic = {}
+        this.countrieSelect = null
         this.showSpeaker =! this.showSpeaker
+        this.$v.formSpeaker.reset();
       },
       picSpeaker(e){
         let files = e.target.files || e.dataTransfer.files
