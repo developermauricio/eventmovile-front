@@ -462,7 +462,7 @@ export default {
         probes:[],
         questionsProbes:[],
         styles:[],
-        uri: process.env.VUE_APP_API_URL,
+        uri: process.env.VUE_APP_URL_BASE,
         uriImg:process.env.VUE_APP_API_URL_FILES,
         voiceCall:{
           idRequest:null,
