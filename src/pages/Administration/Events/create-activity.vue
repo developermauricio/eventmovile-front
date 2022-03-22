@@ -200,7 +200,7 @@
           </div>
 
           <div v-if="showSpeaker" class="col-md-12 mb-3">
-            <label for="lastName">Descripción</label><span class="copys">Max 500 carácteres</span>
+            <label for="lastName">Descripción</label><span class="copys">Max 500 carácteres.</span>
             <textarea maxlength="500" v-model="formSpeaker.sort_description" class="form-control" id="" cols="30"
                       rows="3"></textarea>
             <div class="hasError" v-if="$v.formSpeaker.sort_description.$error">

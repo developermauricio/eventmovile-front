@@ -179,6 +179,17 @@
             </div>
           </div>
 
+          <div v-if="showSpeaker" class="col-md-6 mb-3">
+            <label for="country">Pais de Origen</label>
+            <multiselect v-model="countrieSelect"
+                         :options="countriesEvent"
+                         :selectLabel="'Selecciona una opción'"
+                         :selectedLabel="'Selecciona una opción'"
+                         :custom-label="countryName">
+
+            </multiselect>
+          </div>
+
           <div v-if="showSpeaker" class="col-md-4 mb-3">
             <label for="firstName">Imagen</label><span class="copys">82X82</span>
             <div class="custom-file">
@@ -191,8 +202,8 @@
           </div>
 
           <div v-if="showSpeaker" class="col-md-12 mb-3">
-            <label for="lastName">Descripción</label><span class="copys">Max 200 carácteres</span>             
-            <textarea placeholder="" maxlength="200" v-model="formSpeaker.sort_description" class="form-control"  id="" cols="30" rows="3"></textarea>
+            <label for="lastName">Descripción</label><span class="copys">Max 500 carácteres</span>
+            <textarea placeholder="" maxlength="500" v-model="formSpeaker.sort_description" class="form-control"  id="" cols="30" rows="3"></textarea>
             <span class='copys'>{{countCharacters.remainingCount.Speaker.description}}</span> 
             <div class="hasError" v-if="$v.formSpeaker.sort_description.$error">
               Valid last name is required.
@@ -247,6 +258,8 @@ export default {
     components:{ multiselect, documents, probe, 'editor': Editor },
     data(){
       return{
+        countriesEvent: [],
+        countrieSelect: null,
         roleName:null,
         eventStart:null,
         eventEnd:null,
@@ -315,7 +328,7 @@ export default {
           maxCount: 400,
           remainingCount:{
             Speaker:{
-              description:400,
+              description:500,
               name:100,
             }
           },
@@ -343,7 +356,7 @@ export default {
       listSpeakers:{required},
       formActivity:{
         name:{required, minLength: minLength(10), maxLength: maxLength(100)},
-        sort_description:{required, maxLength: maxLength(400)},
+        sort_description:{required, maxLength: maxLength(500)},
         // type_activity_id:{required},
         start_date:{required},
         start_hour:{required},
@@ -383,6 +396,17 @@ export default {
       }
     },
     methods: {
+      countryName({name}) {
+        return `${name}`
+      },
+
+      getCountriesEvent() {
+        axios.get('get-countries-event').then(res => {
+          this.countriesEvent = res.data.data
+        }).catch(err => {
+          console.log(err)
+        })
+      },
       /**contador de caracteres 
        * maxCount = max characters
        * type = element to validate
@@ -493,6 +517,7 @@ export default {
         })
       },
       showSpeakerForm(){
+        this.getCountriesEvent()
         this.showSpeaker =! this.showSpeaker
       },
       picSpeaker(e){
@@ -524,11 +549,18 @@ export default {
         this.$v.formSpeaker.$touch()
         if(this.$v.formSpeaker.$error) return
 
+        if (this.countrieSelect === null || this.countrieSelect === ''){
+          alert('Al speaker debe asignarle un país')
+          return;
+        }
+
+
         let data = new FormData()
 
         data.append('name', this.formSpeaker.name)
         data.append('sort_description', this.formSpeaker.sort_description)
         data.append('pic', this.formSpeaker.pic)
+        data.append('country_id', JSON.stringify(this.countrieSelect))
 
         axios.post('speakers', data).then(response=>{          
           if(response.data.data){
