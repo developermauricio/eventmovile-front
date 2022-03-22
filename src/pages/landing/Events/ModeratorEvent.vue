@@ -668,6 +668,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scope>
+.event .subtitle {
+  color: gray !important;
+}
+.event .title-main {
+  color: gray !important;
+}
 </style>

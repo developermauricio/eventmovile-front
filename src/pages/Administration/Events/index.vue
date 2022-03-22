@@ -64,7 +64,15 @@
                   <td>{{event.company.name}}</td>
                   <td>{{event.start_date}}</td>
                   <td>{{event.end_date}}</td>
-                  <td class="text-right">                    
+                  <td class="text-right">   
+                    <!-- TODO: add btn webApp -->                 
+                    <button v-if="event.req_web_app == 1" @click="showWebApp(event)" type="button" class="btn btn-outline-primary btn-sm mx-1" title="link WebApp" >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+                        <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
+                        <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z"/>
+                      </svg>
+                    </button>  
+
                     <button v-if="event.wa_req_feria_comercial" @click="goToFeriaAdmin(event.id,event.name)" type="button" class="btn btn-outline-primary btn-sm mx-1" title="Registro feria comercial" >
                       <span class="ti-briefcase"></span>
                     </button>                    
@@ -136,7 +144,8 @@ export default {
       listEvents:[],
       roleName: localStorage.getItem('_current_role_name'),
       showDesign:false,
-      eventID:null
+      eventID:null,
+      urlWebApp: process.env.VUE_APP_URL_WEBAPP,
     }
   },
   created(){
@@ -184,6 +193,16 @@ export default {
     showLanding(id){
       let aux = document.createElement("input");
       let text = this.uri+'Landing-Event?eventId='+id
+      aux.setAttribute("value", text);
+      document.body.appendChild(aux);
+      aux.select();
+      document.execCommand("copy");
+      document.body.removeChild(aux);
+      this.$swal({icon:'success', text:'Url copiada en portapapeles'})
+    },
+    showWebApp( event ) {
+      let aux = document.createElement("input");
+      let text = this.urlWebApp + event.wa_path_value;
       aux.setAttribute("value", text);
       document.body.appendChild(aux);
       aux.select();
