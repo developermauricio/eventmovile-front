@@ -47,35 +47,38 @@
               Please select a valid type.
             </div>
           </div>
-          <div class="col-md-6 mb-3">
-            <label for="country">País ubicación evento</label>
-            <multiselect v-model="countrieSelect"
-                         @input="getCitiesEvent"
-                         :options="countriesEvent"
-                         :selectLabel="'Selecciona una opción'"
-                         :selectedLabel="'Selecciona una opción'"
-                         :custom-label="countryName">
+          <template v-if="formEvent.event_type_id !== null && formEvent.event_type_id !== 1">
+            <div class="col-md-6 mb-3" >
+              <label for="country">País ubicación evento</label>
+              <multiselect v-model="countrieSelect"
+                           @input="getCitiesEvent"
+                           :options="countriesEvent"
+                           :selectLabel="'Selecciona una opción'"
+                           :selectedLabel="'Selecciona una opción'"
+                           :custom-label="countryName">
 
-            </multiselect>
-          </div>
-          <div class="col-md-6 mb-3"  v-if="countrieSelect">
-            <label for="country">Selecciona la ciudad</label>
-            <multiselect v-model="citySelect"
-                         :options="citiesEvent"
-                         :selectLabel="'Selecciona una opción'"
-                         :selectedLabel="'Selecciona una opción'"
-                         :custom-label="cityName">
-
-            </multiselect>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label for="country">Dirección del evento</label>
-            <input type="text" v-model="formEvent.address" v-model.trim="$v.formEvent.address.$model"
-                   class="form-control border-input" id="address" placeholder="" value="" required>
-            <div class="hasError" v-if="$v.formEvent.address.$error">
-              Valid first name is required or incorrect length.
+              </multiselect>
             </div>
-          </div>
+            <div class="col-md-6 mb-3"  v-if="countrieSelect">
+              <label for="country">Selecciona la ciudad</label>
+              <multiselect v-model="citySelect"
+                           :options="citiesEvent"
+                           :selectLabel="'Selecciona una opción'"
+                           :selectedLabel="'Selecciona una opción'"
+                           :custom-label="cityName">
+
+              </multiselect>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="country">Dirección del evento</label>
+              <input type="text" v-model="formEvent.address" v-model.trim="$v.formEvent.address.$model"
+                     class="form-control border-input" id="address" placeholder="" value="" required>
+              <div class="hasError" v-if="$v.formEvent.address.$error">
+                Valid first name is required or incorrect length.
+              </div>
+            </div>
+          </template>
+
         </div>
         <div class="row">
           <div class="col-md-3 mb-3">
