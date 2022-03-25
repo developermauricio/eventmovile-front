@@ -1191,7 +1191,6 @@ export default {
       duration_minutes: {required},
       friendly_url: {required},
       company_id: {required},
-      address: {required},
       message_email: {required},
       subject_email: {required},
       password: {maxLength: maxLength(250)},

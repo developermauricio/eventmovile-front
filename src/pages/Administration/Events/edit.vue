@@ -785,7 +785,6 @@ export default {
     },
     formEvent: {
       name: {required},
-      address: {required},
       event_type_id: {required},
       description: {required},
       start_date: {required},
@@ -1004,7 +1003,7 @@ export default {
     },
     getEvent() {
       axios.get('events/' + this.idEvent).then(response => {
-        console.log('DATA DATA RORO', response)
+      
         const event = response.data
       if(event[0].event_type_id !== 1){
         
