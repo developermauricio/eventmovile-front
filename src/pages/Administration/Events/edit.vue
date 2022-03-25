@@ -77,7 +77,7 @@
           </div>
           <div class="col-md-6 mb-3" v-if="formEvent.address">
             <label for="country">Dirección del evento</label>
-            <input type="text" v-model="formEvent.address" v-model.trim="$v.formEvent.address.$model"
+            <input type="text" v-model="formEvent.address"
                    class="form-control border-input" id="address" placeholder="" value="" required>
           </div>
         </div>
