@@ -59,7 +59,7 @@ export default {
       },
       showModalCer(){
         //this.$modal.show('certificates'); 
-        window.open(`${process.env.VUE_APP_API_URL}/view-certificate/${this.eventId}`, '_blank');
+        window.open(`${process.env.VUE_APP_API_URL}view-certificate/${this.eventId}`, '_blank');
       },
     },
 }
