@@ -73,9 +73,9 @@
               <label for="country">Dirección del evento</label>
               <input type="text" v-model="formEvent.address"
                      class="form-control border-input" id="address" placeholder="" value="" required>
-              <div class="hasError" v-if="$v.formEvent.address.$error">
-                Valid first name is required or incorrect length.
-              </div>
+<!--              <div class="hasError" v-if="$v.formEvent.address.$error">-->
+<!--                Valid first name is required or incorrect length.-->
+<!--              </div>-->
             </div>
           </template>
 
