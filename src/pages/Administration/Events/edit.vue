@@ -77,7 +77,7 @@
           </div>
           <div class="col-md-6 mb-3" v-if="formEvent.address">
             <label for="country">Dirección del evento</label>
-            <input type="text" v-model="formEvent.address" v-model.trim="$v.formEvent.address.$model"
+            <input type="text" v-model="formEvent.address"
                    class="form-control border-input" id="address" placeholder="" value="" required>
           </div>
         </div>
@@ -785,7 +785,6 @@ export default {
     },
     formEvent: {
       name: {required},
-      address: {required},
       event_type_id: {required},
       description: {required},
       start_date: {required},
@@ -1004,7 +1003,7 @@ export default {
     },
     getEvent() {
       axios.get('events/' + this.idEvent).then(response => {
-        console.log('DATA DATA RORO', response)
+      
         const event = response.data
       if(event[0].event_type_id !== 1){
         
