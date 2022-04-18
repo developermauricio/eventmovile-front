@@ -58,8 +58,8 @@ export default {
         return ToReturn
       },
       showModalCer(){
-        //this.$modal.show('certificates');
-        window.open(`https://backendtest-eventmovil.socket-aicode.art/api/v1/view-certificate/${this.eventId}`, '_blank');
+        //this.$modal.show('certificates'); 
+        window.open(`${process.env.VUE_APP_API_URL}/view-certificate/${this.eventId}`, '_blank');
       },
     },
 }
