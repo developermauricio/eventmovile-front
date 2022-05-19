@@ -717,7 +717,7 @@ export default {
         end_date: null,
         start_hour: null,
         end_hour: null,
-        city_id: 1,
+        city_id: null,
         domain_external: null,
         duration_minutes: 60,
         friendly_url: 'asasdasddas',

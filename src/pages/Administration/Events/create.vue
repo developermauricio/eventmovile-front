@@ -1059,14 +1059,14 @@ export default {
         end_hour: null,
         unit_price: 0,
         guests_limit: 0,
-        city_id: 1,
+  
         country_id: 1,
         mode_id: 1,
         pic: {},
         pic_banner: {},
         tags: "text",
         location_coordinates: "321321",
-        address: "aasdasd",
+        address: "",
         duration_minutes: 60,
         code_streaming: null,
         friendly_url: "asasdasddas",
@@ -1085,7 +1085,6 @@ export default {
         end_date: null,
         start_hour: null,
         end_hour: null,
-        city_id: 1,
         duration_minutes: 60,
         friendly_url: "asasdasddas",
         company_id: 1,
@@ -1588,10 +1587,10 @@ export default {
       // data.append('actived', this.formEvent.actived) SI PARA FEBRERO DE 2022 TODO OK BORRAR
       this.showBtnCreate = false;
       // return;
-      if (this.countrieSelect === null || this.countrieSelect === ''){
-        alert('El país es obligatorio')
-        return
-      }
+      // if (this.countrieSelect === null || this.countrieSelect === ''){
+      //   alert('El país es obligatorio')
+      //   return
+      // }
 
       axios
           .post("events", data)
@@ -1661,7 +1660,7 @@ export default {
       data.append("end_date", date_end);
       data.append("unit_price", this.formActivity.unit_price);
       data.append("guests_limit", this.formActivity.guests_limit);
-      data.append("city_id", this.formActivity.city_id);
+      data.append("city_id", JSON.stringify(this.citySelect));
       data.append("mode_id", this.formActivity.mode_id);
       data.append("country_id", this.formActivity.country_id);
       data.append("pic", this.formActivity.pic);
