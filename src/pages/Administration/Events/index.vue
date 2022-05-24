@@ -102,6 +102,9 @@
                     <button @click="deleteEvent(event.id)" v-if="roleName != 'guest'" type="button" class="btn btn-outline-danger btn-sm mx-1">
                        <span class="ti-trash"></span>
                     </button>
+                    <button @click="eventNotification(event.id)" type="button" class="btn btn-outline-danger btn-sm mx-1">
+                      <span class="ti-"></span>
+                    </button>
 
                   </td>
                 </tr>
@@ -152,6 +155,9 @@ export default {
     this.getEvents()
   },
   methods:{
+    eventNotification(event){
+      console.log(event);
+    },
     oncloseModal(){
       this.showDesign = false
     },
