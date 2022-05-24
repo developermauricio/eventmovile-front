@@ -49,6 +49,13 @@
          </p>         
         <div class="row" v-if="topNavbar == false">
           <div class="col-md-12" v-if="event.actived">
+            <!-- btn para registro presencial, new implementation -->
+            <a v-if="event.url_form_register"
+              :href="event.url_form_register" 
+              class="btn btn-primary" 
+              :style="'border:0px; color:'+styles.home_btn_text_color+'; background-color:'+styles.home_btn_color+';font-size: 20px;'+'--color-hover:'+styles.home_btn_color_hover"
+              target="_blank">Formulario de registro presencial</a><br>
+
             <router-link v-if="showSignUp" :to="{path:'Register-Event', query:{eventId:event.id}}">
 
               <button style="border:0px" :style="'color:'+styles.home_btn_text_color+'; background-color:'+styles.home_btn_color+';font-size: 20px;'+'--color-hover:'+styles.home_btn_color_hover"
@@ -60,7 +67,7 @@
               <router-link  :to="{name:'Login', query: {eventId:event.id} }" v-if="valEndDate(event.end_date)">
                   <u><b :style="'color:'+styles.home_titles_color"> {{$t('pages.Events.LandingEvent.loginHere')}}</b></u>
               </router-link>
-           </p>
+            </p>
            
           </div>
           

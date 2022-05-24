@@ -206,6 +206,16 @@
                 <label for="">Limite de asistentes</label>
                 <input type="number" v-model="formEvent.person_numbers" class="form-control border-input" required>
               </div>
+
+              <!-- Url para el btn de registro presencial, new implementation -->
+              <div class="col-md-5 mr-3" v-if="formEvent.event_type_id !== null && formEvent.event_type_id !== 1">
+                <label for="url-btn-register">Url formulario de registro</label>
+                <input 
+                  v-model="formEvent.url_form_register" 
+                  type="text" 
+                  class="form-control border-input" 
+                  placeholder="Ingrese la url del formulario de registro"/>
+              </div>
             </div>
           </div>
           <div class="row px-3">
@@ -257,13 +267,23 @@
                 <label for="firstName">Habilitar chat del evento</label>
               </div>
             </div>
-            <div class="row" v-if="formEvent.req_networking">
-              <div class="offset-1 col-5 pt-2">
-                <input type="checkbox" v-model="formEvent.req_videocall" class="form-check-input"
-                       id="image_on_register">
+
+            <div class="row">
+              <!-- <div v-if="formEvent.req_networking" class="offset-1 col-5 pt-2"> -->
+              <div v-if="formEvent.req_networking" class="col-6 pl-4">
+                <input type="checkbox" v-model="formEvent.req_videocall" class="form-check-input" id="image_on_register">
                 <label for="firstName">Habilitar videollamada</label>
               </div>
+              <!-- Check active on demand, new implementation -->
+              <div class="col-6 pl-4">
+                <input type="checkbox" v-model="formEvent.on_demand" class="form-check-input" id="on_demand">
+                <label class="form-check-label" for="on_demand">Habilitar On Demand</label>
+              </div>
             </div>
+
+            <!-- component on demand, new implementation -->
+            <list-on-demand v-if="formEvent.on_demand" :event_id="eventId" :listOnDemand="listOnDemand"></list-on-demand>
+
             <div class="row">
               <div class="col-6">
                 <h4 class="mb-3">Configuración sistema de pago</h4>
@@ -655,6 +675,7 @@ import jsonExcel from "vue-json-excel"
 import sticker from "../../landing/Events/components/stickerForm"
 import SlidingPagination from 'vue-sliding-pagination'
 import Editor from '@tinymce/tinymce-vue'
+import ListOnDemand from './components/list-on-demand.vue'
 
 export default {
   name: 'MyComponent',
@@ -669,7 +690,8 @@ export default {
     jsonExcel,
     sticker,
     SlidingPagination,
-    'editor': Editor
+    'editor': Editor,
+    ListOnDemand
   },
   data() {
     return {
@@ -761,7 +783,10 @@ export default {
         wa_mapa_value: '',
         wa_banner_one: '',
         wa_banner_two: '',
+        url_form_register: '',
+        on_demand: false,
       },
+      listOnDemand: [],
       show_person_number: false,
     }
   },
@@ -1005,6 +1030,7 @@ export default {
       axios.get('events/' + this.idEvent).then(response => {
       
         const event = response.data
+        console.log('datos de la consulta: ', event)
       if(event[0].event_type_id !== 1){
         
         this.countrieSelect = event[0].city_event ? event[0].city_event.country_event : {}
@@ -1079,6 +1105,7 @@ export default {
         this.formEvent.wa_banner_two = event[0].wa_banner_two
         this.formEvent.wa_req_mapa = event[0].wa_req_mapa
         this.formEvent.wa_mapa_value = event[0].wa_mapa_value
+        this.formEvent.url_form_register = event[0].url_form_register
       })
     },
     createDocument() {
@@ -1172,6 +1199,8 @@ export default {
       else this.formEvent.req_survey = 1
 
       if (this.formEvent.person_numbers === false || this.formEvent.person_numbers === 0) this.formEvent.person_numbers = 0
+
+      (this.formEvent.on_demand === false || this.formEvent.on_demand === 0) ? this.formEvent.on_demand = 0 : this.formEvent.on_demand = 1;
 
       let data = new FormData()
       for (var key in this.formEvent) {
@@ -1398,6 +1427,12 @@ export default {
         this.speakers = response.data.data
       })
     },
+    getDataOnDemand() {
+      axios.get(`on-demand/${ this.idEvent }`)
+        .then( resp => {
+          this.listOnDemand = resp.data;
+        })
+    },
     validateConfStreamingEvent(confEvent) {
       if (confEvent) {
 
@@ -1427,6 +1462,13 @@ export default {
 
         if (typeof confEvent.req_chat_event !== 'undefined' && confEvent.req_chat_event == 0) this.formEvent.req_chat_event = false
         else this.formEvent.req_chat_event = true
+
+        if(typeof confEvent.on_demand !== 'undefined' && confEvent.on_demand == 0) {
+          this.formEvent.on_demand = false 
+        } else {
+          this.formEvent.on_demand = true;   
+          this.getDataOnDemand();
+        }  
       }
     }
   },

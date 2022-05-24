@@ -29,6 +29,7 @@
             </router-link>
           </div>
         </div>
+
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="firstName">Nombre</label><span class="copys">Max 100 carácteres</span>
@@ -38,6 +39,7 @@
               Valid first name is required or incorrect length.
             </div>
           </div>
+
           <div class="col-md-6 mb-3">
             <label for="country">Tipo de evento</label>
             <select v-model="formEvent.event_type_id" class="custom-select d-block w-100" id="country" required="">
@@ -47,6 +49,7 @@
               Please select a valid type.
             </div>
           </div>
+
           <template v-if="formEvent.event_type_id !== null && formEvent.event_type_id !== 1">
             <div class="col-md-6 mb-3" >
               <label for="country">País ubicación evento</label>
@@ -160,6 +163,16 @@
             <label for="">Limite de asistentes</label>
             <input type="number" v-model="formEvent.person_numbers" class="form-control border-input" required>
           </div>
+
+          <!-- Url para el btn de registro presencial, new implementation -->
+          <div class="col-md-5 mr-3" v-if="formEvent.event_type_id !== null && formEvent.event_type_id !== 1">
+            <label for="url-btn-register">Url formulario de registro</label>
+            <input 
+              v-model="formEvent.url_form_register" 
+              type="text" 
+              class="form-control border-input" 
+              placeholder="Ingrese la url del formulario de registro"/>
+          </div>
         </div>
 
         <!-- Configurate style -->
@@ -222,6 +235,7 @@
                 <label for="firstName">Habilitar encuesta</label>
               </div>
             </div>
+
             <div class="row">
               <div class="col-6 pl-4">
                 <input type="checkbox" v-model="formEvent.req_networking" class="form-check-input"
@@ -232,15 +246,27 @@
                 <input type="checkbox" v-model="formEvent.req_chat_event" class="form-check-input"
                        id="image_on_register">
                 <label for="firstName">Habilitar chat del evento</label>
-              </div>
+              </div>              
             </div>
-            <div class="row" v-if="formEvent.req_networking">
-              <div class="offset-1 col-5 pt-2">
+
+            <div class="row">
+              <!-- <div v-if="formEvent.req_networking" class="offset-1 col-5 pt-2"> -->
+              <div v-if="formEvent.req_networking" class="col-6 pl-4">
                 <input type="checkbox" v-model="formEvent.req_videocall" class="form-check-input"
                        id="image_on_register">
                 <label for="firstName">Habilitar videollamada</label>
               </div>
+
+              <!-- Check active on demand, new implementation -->
+              <div class="col-6 pl-4">
+                <input type="checkbox" v-model="formEvent.on_demand" class="form-check-input" id="on_demand">
+                <label class="form-check-label" for="on_demand">Habilitar On Demand</label>
+              </div>
             </div>
+
+            <!-- component on demand, new implementation -->
+            <on-demand v-if="formEvent.on_demand" :listOnDemand="listOnDemand"></on-demand>
+
             <div class="row">
               <div class="col-6">
                 <h4 class="mb-3">Configuración sistema de pago</h4>
@@ -947,7 +973,7 @@
       </div>
 
       <invitations v-if="steps.step3" :add="addAct" :id="idEnvInv"/>
-      </invitations>
+      <!-- </invitations> -->
 
     </form>
 
@@ -982,6 +1008,7 @@ import editPoll from "@/components/Modals/editPoll";
 import registerEvent from "@/components/Modals/registerEvent";
 import habeasData from "@/components/Modals/habeasData";
 import invitations from "@/components/Forms/formInvitations";
+import OnDemand from './components/on-demand.vue';
 
 export default {
   name: "MyComponent",
@@ -992,6 +1019,7 @@ export default {
     invitations,
     habeasData,
     registerEvent,
+    OnDemand,
   },
   data() {
     return {
@@ -1130,7 +1158,10 @@ export default {
         wa_mapa_value: '',
         wa_banner_one: '',
         wa_banner_two: '',
+        url_form_register: '', 
+        on_demand: false,
       },
+      listOnDemand: [],
       waConfiguration: {
         idEventlasd: 0,
       },
@@ -1442,8 +1473,8 @@ export default {
     createEvent() {
       this.$v.formEvent.$touch();
       if (this.$v.formEvent.$error) return;
-      let date_start =
-          this.formEvent.start_date + " " + this.formEvent.start_hour;
+
+      let date_start = this.formEvent.start_date + " " + this.formEvent.start_hour;
       let date_end = this.formEvent.end_date + " " + this.formEvent.end_hour;
       if (date_start > date_end) {
         this.$swal({
@@ -1552,10 +1583,17 @@ export default {
       )
         this.formEvent.person_numbers = 0;
 
+      // Check active on demand, new implementation
+      if ( this.formEvent.on_demand === false || this.formEvent.on_demand === 0 ) {
+        this.formEvent.on_demand = 0
+        this.listOnDemand = []
+      }  else  this.formEvent.on_demand = 1;
+
       //wa path domain
       if (this.formEvent.wa_path_value == '') {
         this.formEvent.wa_path_value = 'webapp' + this.waConfiguration.idEventlasd
       }
+      
       let data = new FormData();
       for (var key in this.formEvent) {
         if (this.formEvent[key] === true) data.append(key, 1);
@@ -1566,6 +1604,7 @@ export default {
       data.append("start_date", date_start);
       data.append("end_date", date_end);
       data.append("city_event_id", JSON.stringify(this.citySelect));
+      data.append("list_on_demand", JSON.stringify(this.listOnDemand));
 
       // data.append('name', this.formEvent.name)
       // data.append('event_type_id', this.formEvent.event_type_id)
