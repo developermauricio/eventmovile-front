@@ -165,13 +165,23 @@
           </div>
 
           <!-- Url para el btn de registro presencial, new implementation -->
-          <div class="col-md-5 mr-3" v-if="formEvent.event_type_id !== null && formEvent.event_type_id !== 1">
-            <label for="url-btn-register">Url formulario de registro</label>
+          <div class="col-md-5 mb-3 mr-3" v-if="formEvent.event_type_id !== null && formEvent.event_type_id !== 1">
+            <label for="url-btn-register">Url formulario de registro V 1.0</label>
             <input 
               v-model="formEvent.url_form_register" 
               type="text" 
               class="form-control border-input" 
               placeholder="Ingrese la url del formulario de registro"/>
+          </div>
+
+          <!-- Url para el certificado, new implementation -->
+          <div class="col-md-5 mx-3">
+            <label for="url-btn-register">Url Certificado V 1.0</label>
+            <input 
+              v-model="formEvent.url_certificate" 
+              type="text" 
+              class="form-control border-input" 
+              placeholder="Ingrese la url del certificado"/>
           </div>
         </div>
 
@@ -1158,6 +1168,7 @@ export default {
         wa_banner_one: '',
         wa_banner_two: '',
         url_form_register: '', 
+        url_certificate: '',
         on_demand: false,
       },
       listOnDemand: [],

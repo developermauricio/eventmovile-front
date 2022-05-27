@@ -54,12 +54,14 @@
               :href="event.url_form_register" 
               class="btn btn-primary" 
               :style="'border:0px; color:'+styles.home_btn_text_color+'; background-color:'+styles.home_btn_color+';font-size: 20px;'+'--color-hover:'+styles.home_btn_color_hover"
-              target="_blank">Formulario de registro presencial</a><br>
+              target="_blank">Registro evento presencial</a><br>
 
             <router-link v-if="showSignUp" :to="{path:'Register-Event', query:{eventId:event.id}}">
-
               <button style="border:0px" :style="'color:'+styles.home_btn_text_color+'; background-color:'+styles.home_btn_color+';font-size: 20px;'+'--color-hover:'+styles.home_btn_color_hover"
-              class="btn btn-primary tickets__btn">{{$t('pages.Events.LandingEvent.register')}}</button>
+              class="btn btn-primary tickets__btn width-btn">
+                Registro evento virtual
+                <!-- {{$t('pages.Events.LandingEvent.register')}} -->
+              </button>
 
             </router-link><br>
             
@@ -1115,6 +1117,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4{
 
 .social-links li a img{
   width: 50px;
+}
+
+.width-btn {
+  width: auto !important;
 }
 
 /* RESPONSIVE */

@@ -381,6 +381,21 @@
                         <button type="button" class="btn btn-outline-primary btn-sm mx-1" @click="updateDesignEvent()">Guardar</button>
                     </div>
                 </div>
+
+                <div class="mb-5">
+                    <div class="row">
+                        <h6 class="ml-4">Slider de logos</h6>
+                        <!-- Check active slider logos, new implementation   v-model="" -->
+                        <div class="col-11 mt-2 ml-4">
+                            <label class="form-check-label label-logos">
+                                <input @change="changeValueSliderLogos" v-model="sliderLogos" type="checkbox" class="form-check-input">
+                                Habilitar slider
+                            </label>
+                        </div>
+                    </div>
+
+                    <slider-logos :event_id="eventID" v-if="sliderLogos"></slider-logos>
+                </div>
             </div>
          </div>
         </modal>
@@ -388,8 +403,13 @@
 </template>
 <script>
 import { required, minLength, maxLength } from "vuelidate/lib/validators"
+import SliderLogos from './sliderLogos.vue'
+
 export default {
     name:"design",
+    components: {
+        SliderLogos,        
+    },
     props:['showModal','eventID'],
     watch: {
         showModal:function(newVal){
@@ -454,6 +474,7 @@ export default {
             },
             wa_banner_one:'',
             wa_banner_two:'',
+            sliderLogos: false,
         }
     },
     validations(){
@@ -589,6 +610,8 @@ export default {
         },
         getDesignEvent(){
             axios.get(`${this.urlApi}/${this.eventID}`).then(res=>{
+                (res.data.slider_logos == 0) ? this.sliderLogos = false : this.sliderLogos = true;   
+
                 if(res.data.id){
                     let temp = {}
                     for ( var key in res.data){
@@ -639,11 +662,28 @@ export default {
                 })  .catch(e=>{
                 this.$swal({icon:'error',text:e})
             })
+        },
+        changeValueSliderLogos(e) {
+            let check = e.target.checked ? '1' : '0';
+            let data = {
+                'slider_logos': check,
+                'id': this.form.id
+            }
+
+            axios.put('update-slider-logos', data)
+                .then( resp => {
+                    console.log('resp: ', resp)
+                }).catch(error => {
+                    console.log('error: ', error)
+                });
         }
     },
 }
 </script>
 <style scope>
+    .label-logos {
+        cursor: pointer;
+    }
     .paddingzero{
         padding-left: 0%;
         padding-right: 0%;

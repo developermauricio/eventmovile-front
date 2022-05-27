@@ -47,20 +47,28 @@
             <jsonExcel class="btn btn-default p-1 w-100 mt-1"  type="xls"  name="plantillaRegistro.xls"  :fetch="fetchData" >Plantilla de registro <span class="ti-download"></span></jsonExcel>
          </div>
          <div class="col-3 mt-1" >   
-            <div class="custom-file ">
-               
+            <div class="custom-file ">               
                <input @change="getFileExcel" class="custom-file-input"  name="p1" type="file" id="usersExcel" accept=".xls,.xlsx">
                <label class="custom-file-label" id="logoText" for="imageEvento">Seleccionar</label>
             </div>
          </div>
-         <div class="col-3 " v-if="showBtnCargar1">
-            <button  class="btn btn-default mt-1" @click.prevent="excelToJson(1)">
-               <div v-if="showLoader1" class="loader"></div>
-               <span v-if="showLoader1 == false">Cargar usuarios</span> 
-            </button>
-         </div>
-         
+         <!-- Check active envio de correos, new implementation  -->
+         <template v-if="showBtnCargar1">
+            <div class="col-2 ml-4 pt-3">
+                  <label class="form-check-label label-logos">
+                     <input v-model="sendEmailRegister" type="checkbox" class="form-check-input">
+                     Enviar correo
+                  </label>
+            </div>
+            <div class="col-3">
+               <button  class="btn btn-default mt-1" @click.prevent="excelToJson(1)">
+                  <div v-if="showLoader1" class="loader"></div>
+                  <span v-if="showLoader1 == false">Cargar usuarios</span> 
+               </button>
+            </div>
+         </template>
       </div>
+
       <div class="row">
          <div class="col-3">
             <jsonExcel class="btn btn-default p-1 w-100 mt-1" type="xls" name="plantillaInvitaciones.xls"  :fetch="fetchData" >Plantilla de invitaciones <span class="ti-download"></span></jsonExcel>
@@ -71,13 +79,22 @@
                <label class="custom-file-label" id="logoText" for="imageEvento">Seleccionar</label>
             </div>
          </div>
-         <div class="col-3" v-if="showBtnCargar2">
-            
-            <button class="btn btn-default mt-1" @click.prevent="excelToJson(2)">
-               <div v-if="showLoader2" class="loader"></div>
-               <span v-if="showLoader2 == false">Cargar usuarios</span> 
-            </button>
-         </div>
+         <template v-if="showBtnCargar2">
+            <!-- Check active envio de correos, new implementation   -->
+            <div class="col-2 ml-4 pt-3">
+                  <label class="form-check-label label-logos">
+                     <input v-model="sendEmailInvitation" type="checkbox" class="form-check-input">
+                     Enviar correo
+                  </label>
+            </div>
+            <div class="col-3">
+               
+               <button class="btn btn-default mt-1" @click.prevent="excelToJson(2)">
+                  <div v-if="showLoader2" class="loader"></div>
+                  <span v-if="showLoader2 == false">Cargar usuarios</span> 
+               </button>
+            </div>
+         </template>
          <div class="col-12">
             <h5 class="txt-import-status" v-if="totalFields > 0">Se han cargado {{successFields}} de {{totalFields}} registros</h5>
             <p v-if="listErrors.length > 0" style="padding-left: 45%;">Tabla de errores</p>
@@ -140,9 +157,9 @@
 							<span class="ti-pencil-alt"></span>
 						</button>
 
-                  <button type="button" class="btn btn-outline-danger btn-sm mx-1">
+                  <!-- <button type="button" class="btn btn-outline-danger btn-sm mx-1">
                      <span class="ti-trash"></span>
-                  </button>
+                  </button> -->
                   </td>
                </tr>
             </tbody>
@@ -203,6 +220,8 @@ export default {
 					show:false,
 					invitation:{}
 			},
+         sendEmailRegister: false,
+         sendEmailInvitation: false,
       }
    },
    validations:{
@@ -272,7 +291,8 @@ export default {
                   rowObject.map(async (item, index)=>{
                      let params = {
                         data: item,
-                        event_id: this.eventId
+                        event_id: this.eventId,
+                        send_email: (type == 1) ? this.sendEmailRegister : this.sendEmailInvitation,
                      }
                      if(type == 1){
                         this.showLoader1 = true
