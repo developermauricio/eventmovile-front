@@ -186,7 +186,6 @@ export default {
     },
     switchDesignComponent(event){
       this.eventID = event
-      console.log("Click")
       this.showDesign = !this.showDesign
     },
     showDesignComponent:function(newVal){
