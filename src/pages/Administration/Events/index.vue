@@ -79,7 +79,9 @@
                     <button @click="switchDesignComponent(event.id)" type="button" class="btn btn-outline-primary btn-sm mx-1">
                             <span class="ti-palette"></span>
                     </button>
-
+                    <button @click="eventNotification(event)" type="button" data-toggle="modal" data-target="#modal-admin-notifications" class="btn btn-outline-primary btn-sm mx-1">
+                      <span class="ti-bell"></span>
+                    </button>
                     <router-link  target="_blank" :to="{path:'Landing-Event', query: {eventId:event.id} }" v-if="roleName == 'guest'">
                       <button type="button" class="btn btn-outline-primary btn-sm mx-1" title="Ver landing" >
                         <span class="ti-eye"></span>
@@ -102,10 +104,6 @@
                     <button @click="deleteEvent(event.id)" v-if="roleName != 'guest'" type="button" class="btn btn-outline-danger btn-sm mx-1">
                        <span class="ti-trash"></span>
                     </button>
-                    <button @click="eventNotification(event.id)" type="button" class="btn btn-outline-danger btn-sm mx-1">
-                      <span class="ti-"></span>
-                    </button>
-
                   </td>
                 </tr>
               </tbody>
@@ -127,6 +125,17 @@
         </card> -->
       </div>
       <design :showModal="showDesign" :eventID="eventID" @close-modal="oncloseModal()" />
+      <!--=====================================
+		   MÓDULO NOTIFICACIONES
+      ======================================-->
+      <div class="modal fade bd-example-modal-lg" id="modal-admin-notifications" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <h1>Modal</h1>
+          </div>
+        </div>
+      </div>
+      <notification-new :eventName="eventName" :eventId="eventIdNotification" :showModalNotification="showModalNotification" @close-modal-notification="onCloseModalNotification()"></notification-new>
     </div>
 </template>
 <script>
@@ -134,10 +143,13 @@ import Vue from 'vue'
 import { PaperTable } from "@/components";
 import SlidingPagination from 'vue-sliding-pagination'
 import design from '../../landing/Events/components/design'
+import NotificationNew from "../components/NotificationNew";
+
 
 export default {
   components: {
-    PaperTable, SlidingPagination, design
+    PaperTable, SlidingPagination, design,
+    NotificationNew
   },
   data() {
     return {
@@ -147,7 +159,10 @@ export default {
       listEvents:[],
       roleName: localStorage.getItem('_current_role_name'),
       showDesign:false,
+      showModalNotification:false,
       eventID:null,
+      eventName:null,
+      eventIdNotification:null,
       urlWebApp: process.env.VUE_APP_URL_WEBAPP,
     }
   },
@@ -156,7 +171,12 @@ export default {
   },
   methods:{
     eventNotification(event){
-      console.log(event);
+      this.showModalNotification = true
+      this.eventIdNotification = event.id
+      this.eventName = event.name
+    },
+    onCloseModalNotification(){
+      this.showModalNotification = false
     },
     oncloseModal(){
       this.showDesign = false
