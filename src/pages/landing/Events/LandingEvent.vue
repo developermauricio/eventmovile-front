@@ -328,15 +328,15 @@ export default {
     }
   },
   async created(){
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-      (function(){
-      var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-      s1.async=true;
-      s1.src='https://embed.tawk.to/6164498e157d100a41abd94e/1fhnrulpu';
-      s1.charset='UTF-8';
-      s1.setAttribute('crossorigin','*');
-      s0.parentNode.insertBefore(s1,s0);
-      })();
+    // var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    //   (function(){
+    //   var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    //   s1.async=true;
+    //   s1.src='https://embed.tawk.to/6164498e157d100a41abd94e/1fhnrulpu';
+    //   s1.charset='UTF-8';
+    //   s1.setAttribute('crossorigin','*');
+    //   s0.parentNode.insertBefore(s1,s0);
+    //   })();
     //corrección diferenciación de login para evento 
     this.eventId = this.$route.query.eventId        
     if(this.event_id)
@@ -622,6 +622,7 @@ export default {
         this.$modal.hide('modal-activities')
     },
     async seeActivitities(ticket){
+  
       this.currentTicket = ticket
       const activities = JSON.parse(ticket.activities)
       try{

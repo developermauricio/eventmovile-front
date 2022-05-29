@@ -427,7 +427,7 @@ import answersProbe from './components/answersProbes'
 import AgoraOnlyAudio from '../../../components/Agora/agoraAudioComponent'
 import timeline from './components/timeLineActivities'
 import getlang from "@/lang/index.js";
-
+import {publishMQTT, subscriberMQTT} from "@/plugins/mqtt-v2";
 export default {
     name: 'StreamingEvent',
     props:['activityId'],
@@ -811,7 +811,8 @@ export default {
             type
           }
           const topic = 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/question';
-          this.mqttConection.publish(topic, JSON.stringify(params_2))
+          publishMQTT(topic, JSON.stringify(params_2))
+          // this.mqttConection.publish(topic, JSON.stringify(params_2))
           this.textUpHand = null
           setTimeout(() => {
             this.scrollEndHand()
@@ -987,6 +988,74 @@ export default {
         const topic = 'eventmovil/'+this.activity.event_id+'/'+this.activityId;
         this.mqttConection.unsubscribe(topic)
       },
+
+      newMqtt(){
+        let key = 'mensaje'
+          
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/chat', (message) => {
+               const messageJSON = JSON.parse(message.toString())
+               this.getMessages2(messageJSON)
+            })
+
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/chat', (message) => {
+               const messageJSONEvent = JSON.parse(message.toString())
+               this.getMessages2Event(messageJSONEvent)
+            })
+
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/question', (message) => {
+               const questionAnswer = JSON.parse(message.toString())
+                if(questionAnswer.user_id==localStorage.getItem('_current_user_id')){
+                    if(questionAnswer.answer && questionAnswer.answer!=null){
+                      this.getUphands()
+                    }else{
+                      this.getUphands2(questionAnswer);
+                    }
+                }
+            })
+
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/probes', () => this.getProbes(this.activityId))
+
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/networking/'+this.user_id+'/networking/guest_invitation/', (message) => {
+               const msg = JSON.parse(message);
+
+                _this.$swal.fire({
+                        position: 'bottom-end',
+                        text: msg.creator_name+' quiere conectar contigo. Ve a Networking para iniciar la conversación.',
+                        showConfirmButton: true,
+                    }).then((result)=>{
+                            const topic_of_creator = 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/networking/'+msg.creator_id+'/networking/guest_i_agree/';
+                            if(result.isConfirmed){
+                              publishMQTT(topic_of_creator, JSON.stringify({"i_agree": true, "item":msg.item,  "guest_name":msg.guest_name,  "guest_id":msg.guest_id}))
+                                // this.mqttConection.publish(topic_of_creator, JSON.stringify({"i_agree": true, "item":msg.item,  "guest_name":msg.guest_name,  "guest_id":msg.guest_id}))
+                            } else {
+                              publishMQTT(topic_of_creator, JSON.stringify({"i_agree": false, "guest_name":msg.guest_name}))
+                                // this.mqttConection.publish(topic_of_creator, JSON.stringify({"i_agree": false, "guest_name":msg.guest_name}))
+                            }
+                    })
+            })
+
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/networking/'+this.user_id+'/networking/messages_receive', (message) => {
+               const msg2 = JSON.parse(message);
+
+                if(_this.inNetworking==false){
+                this.$swal.fire({
+                  toast: true,
+                  icon: 'info',
+                  title: msg2.name+' '+msg2.lastname+' te escribió',
+                  animation: false,
+                  position: 'bottom-start',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', this.$swal.stopTimer)
+                    toast.addEventListener('mouseleave', this.$swal.resumeTimer)
+                  }
+                })
+                }
+            })
+      },
+
       listenMQTT(){
         const _this = this;
         console.log(this.activityId);
@@ -1111,7 +1180,8 @@ export default {
                     created_at:item.data.data[0].created_at
                   }
                   this.message = ''
-                  this.mqttConection.publish(topic, JSON.stringify(params_1))
+                  // this.mqttConection.publish(topic, JSON.stringify(params_1))
+                  publishMQTT(topic, JSON.stringify(params_1))
 
                 }
               }
@@ -1144,7 +1214,8 @@ export default {
             created_at: item.data.data.created_at
           }
           this.messageEvent = ''
-          this.mqttConection.publish(topic, JSON.stringify(params_1))
+          // this.mqttConection.publish(topic, JSON.stringify(params_1))
+          publishMQTT(topic, JSON.stringify(params_1))
 
 
         }).catch(error =>{
@@ -1483,9 +1554,10 @@ export default {
           this.getEvent()
           this.getStyles()
           this.getAuthorizationActivity();
+          this.newMqtt()
           // this.getMessagesEvent()
-          this.subscriptionMqtt()
-          this.listenMQTT()
+          // this.subscriptionMqtt()
+          // this.listenMQTT()
         })
       },
       verifyInteractionsAll(req){

@@ -314,7 +314,7 @@
 
 <script>
 //import AgoraOnlyAudio from '../../../components/Agora/agoraAudioComponent'
-
+import {publishMQTT, subscriberMQTT} from "@/plugins/mqtt-v2";
 export default {
   name:'ModeratorEvent',
   //components:{AgoraOnlyAudio},
@@ -413,7 +413,8 @@ export default {
       console.log("reponseAnswer:", reponseAnswer);
       this.showAnswer = null
       const topic = 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/question';
-      this.mqttConection.publish(topic, JSON.stringify(reponseAnswer.data.data))
+      publishMQTT(topic, JSON.stringify(reponseAnswer.data.data))
+      // this.mqttConection.publish(topic, JSON.stringify(reponseAnswer.data.data))
       this.answer = ''
     },
     showDivAnswer(id){
@@ -422,7 +423,9 @@ export default {
     deleteUpHand(id){
       axios.delete('questionActivities/'+id).then(item=>{
         const topic = 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/question';
-        this.mqttConection.publish(topic, JSON.stringify(item.data.data))
+        publishMQTT(topic, JSON.stringify(item.data.data))
+        // this.mqttConection.publish(topic, JSON.stringify(item.data.data))
+        
         this.$swal('Pregunta omitida')
       })
     },
@@ -466,7 +469,7 @@ export default {
         }
         const response = await axios.get(`activityMessagesExtLand/${this.activityId}`, {params})
 
-        this.allMessages = response.data.reverse()
+        this.allMessages = response.data.data.reverse()
         
         // let scroll = document.getElementById('scrollChat')
         // scroll.scrollTop = 1000
@@ -482,9 +485,12 @@ export default {
         }
         //const response = await axios.get(`eventChat/${this.activity.event_id}`, {params})
         const response = await axios.get(`eventChatext/${this.activity.event_id}`, {params})
-        if(response.data.length && response.data.length>0){
-          this.allMessagesEvent = response.data.reverse()
+        console.log('RESPONSE DATA', response.data)
+        if(response.data.data.length > 0){
+      
+          this.allMessagesEvent = response.data.data.reverse()
         }
+        console.log(this.allMessagesEvent)
         this.scrollEnd()
         setTimeout(() => {
           this.scrollEnd()
@@ -518,9 +524,11 @@ export default {
         axios.get(`activityExternal/${this.activityId}`).then(response =>{
           this.activity = response.data
           this.getEvent()
-          this.subscriptionMqtt()
+          
+          // this.subscriptionMqtt()
           this.getMessagesEvent()
-          this.listenMQTT()
+          // this.listenMQTT()
+          this.mqttConectionMessagesEventGlobales();
         })
       },
       getEvent(){
@@ -639,9 +647,22 @@ export default {
         });
 
       },
+       mqttConectionMessagesEventGlobales() {
+            let key = 'mensaje'
+          
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/chat', () => this.getMessagesEvent())
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/chat', () => this.getMessages())
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/question', () => this.getUphands())
+            subscriberMQTT(key, 'eventmovil/'+this.activity.event_id+'/'+this.activityId+'/probes', () => this.getProbes(this.activityId))
+        },
+        
       listenMQTT(){
         const _this = this;
-        console.log(this.activityId);
+        
+        const topic_secundary = 'eventmovil/'+this.activity.event_id+'/#';
+        subscriberMQTT('message', topic_secundary, (data) => {
+            
+        });
         this.mqttConection.on('message', function (topic, message) {
           console.log("topic->",topic);
           switch (topic) {

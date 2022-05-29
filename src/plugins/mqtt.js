@@ -12,6 +12,7 @@ const url = 'wss://mqtt.socket-aicode.art:8083';
 }; */
 const options = {
     // clientId:"mqttjs01",
+    clientId: "mqttjs_3be2c321",
     username:process.env.VUE_APP_USER_MQTT,
     password:process.env.VUE_APP_PASSWORD_MQTT,
     connectTimeout: 4000, // Time out

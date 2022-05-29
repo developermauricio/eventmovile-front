@@ -1037,12 +1037,13 @@ export default {
       })
     },
     getEvent() {
+      setTimeout(() =>{
       axios.get('events/' + this.idEvent).then(response => {
       
         const event = response.data
         console.log('datos de la consulta: ', event)
       if(event[0].event_type_id !== 1){
-        
+        // alert('joasas');
         this.countrieSelect = event[0].city_event ? event[0].city_event.country_event : {}
         this.citySelect = event[0].city_event || {}
         this.formEvent.address = event[0].address
@@ -1050,7 +1051,8 @@ export default {
         this.formEvent.name = event[0].name
         this.formEvent.event_type_id = event[0].event_type_id
         this.formEvent.description = event[0].description
-        this.formEvent.city = event[0].city.name
+        //this.formEvent.city = event[0].city.name
+        this.formEvent.city = event[0].city ? event[0].city.name : ''
 
         this.formEvent.activities = event[0].activities
         this.formEvent.domain_external = event[0].domain_external
@@ -1118,6 +1120,7 @@ export default {
         this.formEvent.url_form_register = event[0].url_form_register
         this.formEvent.url_certificate = event[0].url_certificate
       })
+      }, 1000)
     },
     createDocument() {
       this.$v.formDocument.$touch()
@@ -1211,7 +1214,11 @@ export default {
 
       if (this.formEvent.person_numbers === false || this.formEvent.person_numbers === 0) this.formEvent.person_numbers = 0
 
-      (this.formEvent.on_demand === false || this.formEvent.on_demand === 0) ? this.formEvent.on_demand = 0 : this.formEvent.on_demand = 1;
+      if(this.formEvent.on_demand === false || this.formEvent.on_demand === 0){
+        this.formEvent.on_demand = '0'
+      }else{
+        this.formEvent.on_demand = '1';
+      }
 
       let data = new FormData()
       for (var key in this.formEvent) {
@@ -1227,7 +1234,9 @@ export default {
 
       data.append('start_date', date_start)
       data.append('end_date', date_end)
-      data.append("city_event_id", JSON.stringify(this.citySelect));
+      // JSON.stringify(this.citySelect)
+      data.append("city_event_id", this.citySelect ? this.citySelect.id : 0);
+
       // data.append('name', this.formEvent.name)
       // data.append('event_type_id', this.formEvent.event_type_id)
       // data.append('description', this.formEvent.description)
@@ -1477,7 +1486,7 @@ export default {
         if(typeof confEvent.on_demand !== 'undefined' && confEvent.on_demand == 0) {
           this.formEvent.on_demand = false 
         } else {
-          this.formEvent.on_demand = true;   
+          this.formEvent.on_demand = true; 
           this.getDataOnDemand();
         }  
       }
