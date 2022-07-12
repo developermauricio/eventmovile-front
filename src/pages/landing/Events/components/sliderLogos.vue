@@ -15,7 +15,7 @@
         
         <div class="col-5">
             <div class="form-group">
-                <label>Logo </label><span class="copys">*</span>
+                <label>Logo </label><span class="copys">* 300 x 300</span>
                 <div class="custom-file">
                     <input @change="onFileChange" 
                         type="file" 

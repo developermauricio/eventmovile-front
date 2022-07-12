@@ -33,6 +33,15 @@
                        name="ReporteRegistrados.csv" type="csv" :fetch="fetchDataGuests">Reporte de registrados
             </jsonExcel>
           </div>
+          <div class="col-4">
+            <jsonExcel 
+              class="btn btn-outline-primary btn-sm mx-1"
+              name="ReporteCalificacionActividades.csv" 
+              type="csv" 
+              :fetch="getReportRateForEvent">
+              Reporte calificación actividades
+            </jsonExcel>
+          </div>
         </div>
         <div class="row">
           <div class="col-md-6 mb-3">
@@ -396,7 +405,7 @@
               </div>
               <div class="col-12 col-md-6">
                 <input type="checkbox" v-model="formEvent.wa_req_mapa" class="form-check-input" id="wa_req_path">
-                <label for="wa_req_path">Habilitar mapa</label>
+                <label for="wa_req_path">Habilitar mapa</label><span class="copys">700 x 700</span>
                 <div v-if="formEvent.wa_req_mapa">
                   <input type="file" @change="mapaUp" class="form-control" placeholder="Mapa del evento"
                          id="wa_mapa_value">
@@ -685,6 +694,7 @@ import sticker from "../../landing/Events/components/stickerForm"
 import SlidingPagination from 'vue-sliding-pagination'
 import Editor from '@tinymce/tinymce-vue'
 import ListOnDemand from './components/list-on-demand.vue'
+import axios from 'axios'
 
 export default {
   name: 'MyComponent',
@@ -924,6 +934,7 @@ export default {
     async fetchDataGuests() {
       let response
       response = await axios.get(`reportEventUsers/${this.eventId}?pagination=false`)
+     
       if (typeof response.data.data !== 'undefined') {
         if (response.data.data.length == 0) this.$swal({icon: 'error', text: 'No hay datos'})
         return response.data
@@ -931,6 +942,17 @@ export default {
         return response.data
       }
 
+    },
+    // Metodo para descargar un reporte de la calificcion de las actividades.
+    async getReportRateForEvent() {
+      const { data } = await axios.get(`get-report-rate-for-event/${this.eventId}`)
+      const { dataReport, status } = data
+      
+      if ( status == 200 ) {
+        return dataReport
+      } else {
+        this.$swal({icon: 'error', text: 'No hay datos dispónibles.'})
+      }
     },
     async fetchData() {
       const response = await axios.get(`exportPoll/${this.eventId}`)

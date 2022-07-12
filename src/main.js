@@ -18,9 +18,9 @@ import mqtt from "./plugins/mqtt"
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css';
 
-import CxltToastr from 'cxlt-vue2-toastr'
+/* import CxltToastr from 'cxlt-vue2-toastr'
 Vue.use(CxltToastr)
-import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css';
+import 'cxlt-vue2-toastr/dist/css/cxlt-vue2-toastr.css'; */
 
 import Vuelidate from "vuelidate"
 import moment from 'moment'
@@ -52,8 +52,8 @@ Vue.use(VueGtag, {
   config: { id: "G-DH5FPYXCTK" },
   // globalObjectName: 'foo'
 });
-import SmartTable from 'vuejs-smart-table'
-Vue.use(SmartTable)
+/* import SmartTable from 'vuejs-smart-table'
+Vue.use(SmartTable) */
 
 window.Pusher = require('pusher-js');
 let WebSocketToken = 'Bearer ' + localStorage.getItem('token');
