@@ -299,6 +299,14 @@
               </div>
             </div>
 
+             <div class="row">
+              <!-- Check active name_company, new implementation -->
+              <div class="col-6 pl-4">
+                <input type="checkbox" v-model="formEvent.enable_company" class="form-check-input" id="enable_company">
+                <label class="form-check-label" for="enable_company">Habilitar nombre empresa</label>
+              </div>
+            </div>
+
             <!-- component on demand, new implementation -->
             <list-on-demand v-if="formEvent.on_demand" :event_id="eventId" :listOnDemand="listOnDemand"></list-on-demand>
 
@@ -805,6 +813,7 @@ export default {
         url_form_register: '',
         url_certificate: '',
         on_demand: false,
+        enable_company: false,
       },
       listOnDemand: [],
       show_person_number: false,
@@ -1242,6 +1251,12 @@ export default {
         this.formEvent.on_demand = '1';
       }
 
+      if(this.formEvent.enable_company === false || this.formEvent.enable_company === 0){
+        this.formEvent.enable_company = '0'
+      }else{
+        this.formEvent.enable_company = '1';
+      }
+
       let data = new FormData()
       for (var key in this.formEvent) {
         if (this.formEvent[key] === true)
@@ -1510,6 +1525,11 @@ export default {
         } else {
           this.formEvent.on_demand = true; 
           this.getDataOnDemand();
+        }  
+        if(typeof confEvent.enable_company !== 'undefined' && confEvent.enable_company == 0) {
+          this.formEvent.enable_company = false 
+        } else {
+          this.formEvent.enable_company = true; 
         }  
       }
     }

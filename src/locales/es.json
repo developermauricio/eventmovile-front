@@ -95,6 +95,7 @@
         "name": "Nombre",
         "lastName": "Apellido",
         "email": "Email",
+        "nameCompany": "Nombre empresa",
         "firstProfessionalDegree": "Título profesional*",
         "selectTypeOfAssistance": "Seleccionar tipo de asistencia",
         "chooseAnOption": "Escoja una opción",

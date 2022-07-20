@@ -274,6 +274,14 @@
               </div>
             </div>
 
+            <div class="row">
+              <!-- Check active name_company, new implementation -->
+              <div class="col-6 pl-4">
+                <input type="checkbox" v-model="formEvent.enable_company" class="form-check-input" id="enable_company">
+                <label class="form-check-label" for="enable_company">Habilitar nombre empresa</label>
+              </div>
+            </div>
+
             <!-- component on demand, new implementation -->
             <on-demand v-if="formEvent.on_demand" :listOnDemand="listOnDemand"></on-demand>
 
@@ -1170,6 +1178,7 @@ export default {
         url_form_register: '', 
         url_certificate: '',
         on_demand: false,
+        enable_company: false,
       },
       listOnDemand: [],
       waConfiguration: {
@@ -1598,6 +1607,11 @@ export default {
         this.formEvent.on_demand = 0
         this.listOnDemand = []
       }  else  this.formEvent.on_demand = 1;
+
+      // Check active enable_company, new implementation
+      if ( this.formEvent.enable_company === false || this.formEvent.enable_company === 0 ) {
+        this.formEvent.enable_company = 0
+      }  else  this.formEvent.enable_company = 1;
 
       //wa path domain
       if (this.formEvent.wa_path_value == '') {

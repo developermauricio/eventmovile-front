@@ -134,6 +134,14 @@
 
                   </div>
 
+                  <!-- TODO: enable_company -->
+                  <div class="col-md-6"  v-if="event.enable_company && event.enable_company == '1'">
+                     <div class="form-group">
+                      <label for="name" :style="'color:'+styles.section_text_color">{{$t('pages.Events.RegisterEvent.nameCompany')}}</label>
+                      <input type="text" v-model="form.name_company" class="form-control" id="name" :placeholder="$t('pages.Events.RegisterEvent.nameCompany')">
+                    </div>
+                  </div>
+
                   <div class="col-md-6"  v-if="event.type.name == 'Híbrido'">
                      <div class="form-group">
                        <label :style="'color:'+styles.section_text_color" for="type_event">{{$t('pages.Events.RegisterEvent.selectTypeOfAssistance')}}</label>
@@ -299,6 +307,7 @@ export default {
         phone:'',
         lastname:'',
         email:'',
+        name_company: '',
         password:'',
         event:'',
         event_type_id:null,
