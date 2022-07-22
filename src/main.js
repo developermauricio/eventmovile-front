@@ -52,8 +52,8 @@ Vue.use(VueGtag, {
   config: { id: "G-DH5FPYXCTK" },
   // globalObjectName: 'foo'
 });
-/* import SmartTable from 'vuejs-smart-table'
-Vue.use(SmartTable) */
+import SmartTable from 'vuejs-smart-table'
+Vue.use(SmartTable)
 
 window.Pusher = require('pusher-js');
 let WebSocketToken = 'Bearer ' + localStorage.getItem('token');

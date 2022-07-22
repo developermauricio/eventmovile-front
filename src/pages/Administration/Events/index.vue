@@ -82,6 +82,9 @@
                     <button @click="eventNotification(event)" type="button" data-toggle="modal" data-target="#modal-admin-notifications" class="btn btn-outline-primary btn-sm mx-1">
                       <span class="ti-bell"></span>
                     </button>
+                    <button @click="eventFeriaComercial(event)" type="button"  data-toggle="modal" data-placement="top" title="Tooltip on top" data-target="#modal-admin-notifications" class="btn btn-outline-primary btn-sm mx-1">
+                      <i class="ti-thumb-up"></i>
+                    </button>
                     <router-link  target="_blank" :to="{path:'Landing-Event', query: {eventId:event.id} }" v-if="roleName == 'guest'">
                       <button type="button" class="btn btn-outline-primary btn-sm mx-1" title="Ver landing" >
                         <span class="ti-eye"></span>
@@ -135,7 +138,10 @@
           </div>
         </div>
       </div>
+      <!--  Notificaciones-->
       <notification-new :eventName="eventName" :eventId="eventIdNotification" :showModalNotification="showModalNotification" @close-modal-notification="onCloseModalNotification()"></notification-new>
+      <!--  Feria Comercial-->
+      <feria-comercial :eventName="eventName" :eventId="eventIdFeriaComercial" :showModalFeriaComercial="showModalFerialComercial" @close-modal-feria-comercial="onCloseModalFeriaComercial()"></feria-comercial>
     </div>
 </template>
 <script>
@@ -144,12 +150,14 @@ import { PaperTable } from "@/components";
 import SlidingPagination from 'vue-sliding-pagination'
 import design from '../../landing/Events/components/design'
 import NotificationNew from "../components/NotificationNew";
+import FeriaComercial from "../components/FeriaComercial";
 
 
 export default {
   components: {
     PaperTable, SlidingPagination, design,
-    NotificationNew
+    NotificationNew,
+    FeriaComercial
   },
   data() {
     return {
@@ -160,9 +168,11 @@ export default {
       roleName: localStorage.getItem('_current_role_name'),
       showDesign:false,
       showModalNotification:false,
+      showModalFerialComercial:false,
       eventID:null,
       eventName:null,
       eventIdNotification:null,
+      eventIdFeriaComercial:null,
       urlWebApp: process.env.VUE_APP_URL_WEBAPP,
     }
   },
@@ -175,8 +185,16 @@ export default {
       this.eventIdNotification = event.id
       this.eventName = event.name
     },
+    eventFeriaComercial(event){
+      this.showModalFerialComercial = true
+      this.eventIdFeriaComercial = event.id
+      this.eventName = event.name
+    },
     onCloseModalNotification(){
       this.showModalNotification = false
+    },
+    onCloseModalFeriaComercial(){
+      this.showModalFerialComercial = false
     },
     oncloseModal(){
       this.showDesign = false
